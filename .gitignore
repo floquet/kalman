@@ -1,0 +1,6 @@
+# ignore compilation detritus across Mac, Cray, SGI
+
+*.o
+*.mod
+*.smod
+*.dSYM
