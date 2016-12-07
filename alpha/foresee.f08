@@ -7,14 +7,18 @@
 !     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 program foresee
-    !use mpi_f08
-    use mInputOutput, only : start_the_show
+
+    use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_option
+    use mInputOutput,                   only : start_the_show
 
     implicit none
 
         write ( *, "( /, 'Running FORESEE ...' )" )
 
         call start_the_show ( )
+
+        write ( *, '( /, "Fortran compiler version: ", g0 )' ) compiler_version ()
+        write ( *, '(    "Fortran compilation options: ", g0, / )' ) compiler_option ()
 
     stop '#  #  # successful completion for program foresee . . .'
 
@@ -27,3 +31,41 @@ end program foresee
     ! was as the Pacific Region Staff Geophysicist. With the U.S. Army, his major contributions were in the areas of improving
     ! barrier munitions, designing digital filters to support protective structures research, and reorganizing the topographic
     ! battalions of the U. S. Army, Europe. He is retired in the grade of Colonel, A.U.S.
+
+
+! Wed Dec  7 14:41:21 CST 2016
+! rditldmt@ITLDMT-MD-O2034:alpha $ pwd
+! /Users/rditldmt/Documents/GitHub Desktop/kalman/alpha
+! rditldmt@ITLDMT-MD-O2034:alpha $ make
+! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
+! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
+! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_input_output.o mod_input_output.f08
+! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o foresee.o foresee.f08
+! mpifort -g -o foresee foresee.o mod_file_handling.o mod_input_output.o mod_io_handles.o
+! rditldmt@ITLDMT-MD-O2034:alpha $ ./foresee haa
+!
+! Running FORESEE ...
+! harvesting command line...
+! The command line argument is haa.
+! File descriptor unit    -10 is opened in mode READ at position ASIS.
+! File descriptor unit    -10 is in the range of values allowed by the compiler.
+! File descriptor unit    -10 is named ../input_data/haa.inp.
+! File descriptor unit    -11 is opened in mode READ at position ASIS.
+! File descriptor unit    -11 is in the range of values allowed by the compiler.
+! File descriptor unit    -11 is named ../input_data/haa.out.
+! File descriptor unit    -12 is opened in mode READ at position ASIS.
+! File descriptor unit    -12 is in the range of values allowed by the compiler.
+! File descriptor unit    -12 is named ../input_data/haa.t.
+! File descriptor unit    -13 is opened in mode READ at position ASIS.
+! File descriptor unit    -13 is in the range of values allowed by the compiler.
+! File descriptor unit    -13 is named ../input_data/haa.p.
+! File descriptor unit    -14 is opened in mode READ at position ASIS.
+! File descriptor unit    -14 is in the range of values allowed by the compiler.
+! File descriptor unit    -14 is named ../input_data/haa.e.
+! STOP #  #  # successful completion for program foresee . . .
+
+! rditldmt@ITLDMT-MD-O2034:alpha $ gfortran --version
+! GNU Fortran (MacPorts gcc7 7-20161127_0) 7.0.0 20161127 (experimental)
+! Copyright (C) 2016 Free Software Foundation, Inc.
+! This is free software; see the source for copying conditions.  There is NO
+! warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.

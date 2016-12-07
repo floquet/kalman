@@ -63,3 +63,18 @@ mod_io_handles.o          :
 # mod_test_suite.o           : mod_timer_CPU.o mod_timer_clock.o
 # mod_timer_clock.o          :
 # mod_timer_CPU.o            :
+
+# rditldmt@ITLDMT-MD-O2034:alpha $ date
+# Wed Dec  7 14:40:27 CST 2016
+# rditldmt@ITLDMT-MD-O2034:alpha $ pwd
+# /Users/rditldmt/Documents/GitHub Desktop/kalman/alpha
+# rditldmt@ITLDMT-MD-O2034:alpha $ make debug
+# PROGRAM  = foresee
+# PRG_OBJ  = foresee.o
+# SRCS     = foresee.f08 mod_file_handling.f08 mod_input_output.f08 mod_io_handles.f08
+# OBJS     = foresee.o mod_file_handling.o mod_input_output.o mod_io_handles.o
+# MODS     = mod_file_handling.f08 mod_input_output.f08 mod_io_handles.f08
+# MOD_OBJS = mod_file_handling.o mod_input_output.o mod_io_handles.o
+# rditldmt@ITLDMT-MD-O2034:alpha $ echo $gflags
+# -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only
+#
