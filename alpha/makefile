@@ -59,6 +59,7 @@ $(PRG_OBJ) : $(MOD_OBJS)
 mod_file_handling.o       :
 mod_io_handles.o          :
 mod_input_output.o        : mod_file_handling.o mod_io_handles.o
+mod_kalman_data.o         :
 # mod_mpif_sgi.o             :
 # mod_test_suite.o           : mod_timer_CPU.o mod_timer_clock.o
 # mod_timer_clock.o          :

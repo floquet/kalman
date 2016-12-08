@@ -10,7 +10,8 @@ module mInputOutput
 
     character ( len = * ), parameter :: PathData = '../input_data/'
 
-    private :: harvest_command_line_sub, open_data_set_sub
+    !procedure, public :: start_the_show_sub => start_the_show
+    private :: harvest_command_line_sub, open_data_set_sub, read_data_set_sub, start_the_show_sub
 
 CONTAINS
 
@@ -37,11 +38,11 @@ CONTAINS
         integer :: FileNameLen
         character ( len = 128 ) :: FileNameStem
 
-            call harvest_command_line_sub ( FileNameStem = FileNameStem, LenCommandArgument  = FileNameLen )
+            !call harvest_command_line_sub ( FileNameStem = FileNameStem, LenCommandArgument  = FileNameLen )
 
-    end subroutine read_data_set_sub ( myIO )
+    end subroutine read_data_set_sub
 
-    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+    !   @   @   @      @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
     subroutine open_data_set_sub ( myIO )
 
