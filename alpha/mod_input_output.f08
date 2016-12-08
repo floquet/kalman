@@ -22,8 +22,24 @@ CONTAINS
         type ( io_handles ) :: myIOHandles
 
             call open_data_set_sub ( myIO = myIOHandles )
+            call read_data_set_sub ( myIO = myIOHandles )
 
     end subroutine start_the_show
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    subroutine read_data_set_sub ( myIO )
+
+        ! slot arguments
+        type ( io_handles ), intent ( in ) :: myIO
+
+        ! local variables
+        integer :: FileNameLen
+        character ( len = 128 ) :: FileNameStem
+
+            call harvest_command_line_sub ( FileNameStem = FileNameStem, LenCommandArgument  = FileNameLen )
+
+    end subroutine read_data_set_sub ( myIO )
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
@@ -32,6 +48,7 @@ CONTAINS
         ! slot arguments
         type ( io_handles ), intent ( out ) :: myIO
 
+        ! local variables
         integer :: FileNameLen
         character ( len = 128 ) :: FileNameStem
 
@@ -42,12 +59,6 @@ CONTAINS
             myIO % t   = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.t' )
             myIO % p   = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.p' )
             myIO % e   = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.e' )
-
-            call find_IU_info ( myIO % inp )
-            call find_IU_info ( myIO % out )
-            call find_IU_info ( myIO % t )
-            call find_IU_info ( myIO % p )
-            call find_IU_info ( myIO % e )
 
     end subroutine open_data_set_sub
 
