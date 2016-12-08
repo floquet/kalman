@@ -57,8 +57,8 @@ $(PRG_OBJ) : $(MOD_OBJS)
 # Blocks and allocations depends on shared
 # mod_unit_values, mod_timer_CPU have no dependencies
 mod_file_handling.o       :
-mod_input_output.o        : mod_file_handling.o mod_io_handles.o
 mod_io_handles.o          :
+mod_input_output.o        : mod_file_handling.o mod_io_handles.o
 # mod_mpif_sgi.o             :
 # mod_test_suite.o           : mod_timer_CPU.o mod_timer_clock.o
 # mod_timer_clock.o          :

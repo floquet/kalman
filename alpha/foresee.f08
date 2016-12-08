@@ -8,7 +8,7 @@
 
 program foresee
 
-    use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_option
+    use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_options
     use mInputOutput,                   only : start_the_show
 
     implicit none
@@ -18,7 +18,7 @@ program foresee
         call start_the_show ( )
 
         write ( *, '( /, "Fortran compiler version: ", g0 )' ) compiler_version ()
-        write ( *, '(    "Fortran compilation options: ", g0, / )' ) compiler_option ()
+        write ( *, '( /, "Fortran compilation options: ", g0, / )' ) compiler_options ()
 
     stop '#  #  # successful completion for program foresee . . .'
 
