@@ -1,6 +1,11 @@
 HAWAIAN AIRLINES - 1998 DAILY CLOSES
-1.004,0.205,4,1,0.0,
-0.0000001
+* * q, r:
+1.004,0.205
+* * filen, predp:
+4, 1
+* * basel, tfactor:
+0.0, 0.0000001
+* * values (no more than 999)
 3.6875
 3.625
 3.625

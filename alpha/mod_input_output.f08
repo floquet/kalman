@@ -3,44 +3,32 @@ module mInputOutput
 
     use mFileHandling,                  only : stdout, safeopen_readonly, find_IU_info
     use mIOHandles,                     only : io_handles
+    use mKalmanData,                    only : KalmanData
 
     implicit none
+
+    type ( KalmanData ) :: myData
 
     integer :: io_handle = stdout
 
     character ( len = * ), parameter :: PathData = '../input_data/'
 
     !procedure, public :: start_the_show_sub => start_the_show
-    private :: harvest_command_line_sub, open_data_set_sub, read_data_set_sub, start_the_show_sub
+    private :: harvest_command_line_sub, open_data_set_sub
 
 CONTAINS
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
-    subroutine start_the_show ()
+    subroutine start_the_show ( )
 
         ! slot arguments
         type ( io_handles ) :: myIOHandles
 
-            call open_data_set_sub ( myIO = myIOHandles )
-            call read_data_set_sub ( myIO = myIOHandles )
+            call          open_data_set_sub  ( myIO = myIOHandles )
+            call myData % read_file_type_inp ( myIO = myIOHandles )
 
     end subroutine start_the_show
-
-    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
-
-    subroutine read_data_set_sub ( myIO )
-
-        ! slot arguments
-        type ( io_handles ), intent ( in ) :: myIO
-
-        ! local variables
-        integer :: FileNameLen
-        character ( len = 128 ) :: FileNameStem
-
-            !call harvest_command_line_sub ( FileNameStem = FileNameStem, LenCommandArgument  = FileNameLen )
-
-    end subroutine read_data_set_sub
 
     !   @   @   @      @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
