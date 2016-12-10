@@ -13,6 +13,7 @@ module mKalmanData
 
     ! variables
     integer :: io_handle = stdout, io_status, record, k
+    integer ( ip ) :: k_numDataPoints
 
     character ( len = 256 ) :: io_msg
 
@@ -46,7 +47,6 @@ contains
         type ( io_handles ), intent ( in ) :: myIO
 
         ! local variables
-        character ( len = 128 ) :: LineNumber
 
             ! read data from the *.inp file
             read ( unit = myIO % inp, fmt = '( A )', iostat = io_status, iomsg = io_msg  ) me % title
@@ -88,12 +88,12 @@ contains
 
             ! read data points
             rewind ( myIO % inp )
-            advance_pointer : do k = 1, 8
+            advance_pointer : do k_numDataPoints = 1, 8
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
             end do advance_pointer
-            read_data_points : do k = 1, me % numDataPoints
-                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k )
-                write ( * , '( g0, ": ", g0 )' ) k, me % dv_x ( k )
+            read_data_points : do k_numDataPoints = 1, me % numDataPoints
+                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
+                !write ( * , '( g0, ": ", g0 )' ) k_numDataPoints, me % dv_x ( k_numDataPoints )
             end do read_data_points
 
             print *, 'data point ( 1 ) = ', me % dv_x ( 1 )
