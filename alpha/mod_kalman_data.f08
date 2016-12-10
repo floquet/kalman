@@ -1,7 +1,7 @@
 !23456789 123456789 223456789 323456789 423456789 523456789 623456789 723456789 823456789 923456789 023456789 123456789 223456789 32
 module mKalmanData
 
-    use, intrinsic :: iso_fortran_env,  only : io_stat_end
+    use, intrinsic :: iso_fortran_env,  only : iostat_end
     use mFileHandling,                  only : stdout, find_IU_info
     use mIOHandles,                     only : io_handles
     use mSetPrecision,                  only : ip, rp
@@ -12,7 +12,7 @@ module mKalmanData
     integer, parameter :: imp1 = 50, imp2 = 50
 
     ! variables
-    integer :: io_handle = stdout, numDataPoints, io_status
+    integer :: io_handle = stdout, numDataPoints, io_status, record
 
     character ( len = 256 ) :: io_msg
 
@@ -62,15 +62,18 @@ contains
 
             ! measure the length of the data, allocate memory, then read the data
             !read ( myIO % inp, fmt = *, position = LineNumber, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            !print *, 'we are now at line number ', trim ( LineNumber ), '.'
+            read ( myIO % inp, rec = record, iostat = io_status, iomsg = io_msg  ) ! skip comment line
+            print *, 'we are now at line number ', record, '.'
             ! count data points
             numDataPoints = 1
             count_data_points : do
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
                 if ( is_iostat_end ( io_status ) ) exit count_data_points
                 numDataPoints = numDataPoints + 1
-            end do
+            end do count_data_points
+
+            print *, 'I counted ', numDataPoints, ' records'
+
 
         return
 

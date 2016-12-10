@@ -13,7 +13,8 @@ MOD_OBJS=$(patsubst %.$(EXT),%.o,$(MODS))
 # Compiler/Linker settings
 # gfortran - gnu (execution: ./a.out) (flags: gflags in ~/.bashrc)
 # mpif90 - gnu, MPI Mac Desktop (execution: mpirun -np 4 ./a.out)
-FC = mpifort
+# FC = mpifort
+FC = gfortran
 FLFLAGS = -g
 FCFLAGS = -c ${gflags}
 PRG_OBJ = $(PROGRAM).o
