@@ -76,7 +76,7 @@ contains
             !print *, 'we are now at line number ', record, '.'
 
             ! count data points
-            me % numDataPoints = 1
+            me % numDataPoints = 0 ! damn trailing blank line in data file
             count_data_points : do
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
                 if ( is_iostat_end ( io_status ) ) exit count_data_points
@@ -87,15 +87,15 @@ contains
 
             ! read data points
             rewind ( myIO % inp )
-            advance_pointer : do k = 1, 9
+            advance_pointer : do k = 1, 8
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
             end do advance_pointer
-            read_data_points : do k = 1, me % numDataPoints
+            read_data_points : do k = 1, me % numDataPoints - 1
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k )
             end do read_data_points
 
-            print *, 'first data point  = ', me % dv_x ( 1 )
-            print *, 'last data point = ', me % dv_x ( me % numDataPoints )
+            print *, 'data point ( 1 ) = ', me % dv_x ( 1 )
+            print *, 'last data point ( ', me % numDataPoints,' ) = ', me % dv_x ( me % numDataPoints )
 
         return
 
