@@ -12,22 +12,31 @@ module mKalmanData
     integer, parameter :: imp1 = 50, imp2 = 50
 
     ! variables
-    integer :: io_handle = stdout, numDataPoints, io_status, record
+    integer :: io_handle = stdout, io_status, record, k
 
     character ( len = 256 ) :: io_msg
 
     type :: KalmanData
-        character ( len = 128 ) :: title
-        real    ( rp ) :: q, r, baseline, TestFactor
+        ! rank 2
+        real ( rp ), allocatable :: pcm_p ( : , : )
+        ! rank 1
+        real ( rp ), allocatable :: dv_x ( : )
+        ! rank 0
+        real ( rp ) :: q, r, baseline, TestFactor
+        real ( rp ) :: x
         integer ( ip ) :: LengthFilter, LengthPrediction
+        integer ( ip ) :: numDataPoints
+        character ( len = 128 ) :: title
     contains
         private
         procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
     end type KalmanData
 
-    private :: read_file_type_inp_sub
+    private :: read_file_type_inp_sub, allocator_sub
 
 contains
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
     subroutine read_file_type_inp_sub ( me, myIO )
 
@@ -40,7 +49,7 @@ contains
         character ( len = 128 ) :: LineNumber
 
             ! read data from the *.inp file
-            read ( myIO % inp, fmt = '( A )', iostat = io_status, iomsg = io_msg  ) me % title
+            read ( unit = myIO % inp, fmt = '( A )', iostat = io_status, iomsg = io_msg  ) me % title
                 if ( io_status /= 0 ) then
                 write ( io_handle, 100 ) 'READ', io_status, trim ( io_msg )
                 call find_IU_info ( myIO % inp )
@@ -62,23 +71,77 @@ contains
 
             ! measure the length of the data, allocate memory, then read the data
             !read ( myIO % inp, fmt = *, position = LineNumber, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            read ( myIO % inp, rec = record, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            print *, 'we are now at line number ', record, '.'
+            !read ( unit = myIO % inp, rec = record, iostat = io_status, iomsg = io_msg  ) ! skip comment line
+            read ( unit = myIO % inp, iostat = io_status, iomsg = io_msg  ) ! skip comment line
+            !print *, 'we are now at line number ', record, '.'
+
             ! count data points
-            numDataPoints = 1
+            me % numDataPoints = 1
             count_data_points : do
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
                 if ( is_iostat_end ( io_status ) ) exit count_data_points
-                numDataPoints = numDataPoints + 1
+                me % numDataPoints = me % numDataPoints + 1
             end do count_data_points
 
-            print *, 'I counted ', numDataPoints, ' records'
+            call allocator_sub ( me )
 
+            ! read data points
+            rewind ( myIO % inp )
+            advance_pointer : do k = 1, 9
+                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
+            end do advance_pointer
+            read_data_points : do k = 1, me % numDataPoints
+                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k )
+            end do read_data_points
+
+            print *, 'first data point  = ', me % dv_x ( 1 )
+            print *, 'last data point = ', me % dv_x ( me % numDataPoints )
 
         return
 
         100 format ( 'I/O failure during ', A, /, 'iostatus = ', g0, /, 'iomsg = ', g0, '.', / )
+        200 format ( F20.9 )
 
     end subroutine read_file_type_inp_sub
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    subroutine allocator_sub ( me )
+
+        class ( KalmanData ), target :: me
+
+        integer :: stat
+        character ( len = 512 ) :: errmsg
+
+            ! rank 2
+            allocate ( me % pcm_p ( 1 : me % numDataPoints, 1 : me % numDataPoints ), stat = stat, errmsg = errmsg )
+            if ( stat /= 0 ) then
+                write ( io_handle, 100 ) ''
+                write ( io_handle, 110 ) me % numDataPoints
+                write ( io_handle, 120 ) trim ( errmsg )
+                write ( io_handle, 130 ) stat
+                flush ( io_handle )
+                stop '!  !  !  fatal program error during allocation'
+            end if
+            me % pcm_p ( : , : )= 0.0_rp ! populate
+
+            ! rank 1
+            allocate ( me % dv_x ( 1 : me % numDataPoints ), stat = stat, errmsg = errmsg )
+            if ( stat /= 0 ) then
+                write ( io_handle, 100 ) ''
+                write ( io_handle, 110 ) me % numDataPoints
+                write ( io_handle, 120 ) trim ( errmsg )
+                write ( io_handle, 130 ) stat
+                flush ( io_handle )
+                stop '!  !  !  fatal program error during allocation'
+            end if
+            me % dv_x ( : ) = 0.0_rp ! populate
+
+        100 format ( 'Mortal error during ', g0, 'allocation...' )  ! allocation or deallocation
+        110 format ( 'requested size is ', g0, ' elements' )
+        120 format ( 'errmsg = ', g0, '.' )
+        130 format ( 'stat = ', g0 )
+
+    end subroutine allocator_sub
 
 end module mKalmanData
