@@ -132,7 +132,6 @@ contains
         return
 
         100 format ( 'I/O failure during ', A, /, 'iostatus = ', g0, /, 'iomsg = ', g0, '.', / )
-        200 format ( F20.9 )
 
     end subroutine read_file_type_inp_sub
 
