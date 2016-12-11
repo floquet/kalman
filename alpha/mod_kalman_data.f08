@@ -25,7 +25,7 @@ module mKalmanData
         ! rank 0
         real ( rp ) :: q, r, baseline, TestFactor
         real ( rp ) :: x
-        integer ( ip ) :: LengthFilter, LengthPrediction
+        integer        :: LengthFilter, LengthPrediction
         integer ( ip ) :: numDataPoints
         character ( len = 128 ) :: title
     contains
@@ -43,7 +43,7 @@ contains
 
         class ( KalmanData ), target :: me
 
-            call me % set_interval_sub ( )
+            call set_interval_sub ( me )
 
     end subroutine kalman_filter_sub
 

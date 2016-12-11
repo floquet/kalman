@@ -17,7 +17,7 @@ program foresee
 
         write ( *, "( /, 'Running FORESEE ...' )" )
 
-        call get_data ( myData )
+        call get_data ( myData = dataHAA )
 
         write ( *, '( /, "Fortran compiler version: ", g0 )' ) compiler_version ()
         write ( *, '( /, "Fortran compilation options: ", g0, / )' ) compiler_options ()
