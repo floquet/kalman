@@ -20,7 +20,7 @@ CONTAINS
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
-    subroutine start_the_show ( )
+    subroutine get_data ( myData )
 
         ! slot arguments
         type ( io_handles ) :: myIOHandles
@@ -28,7 +28,7 @@ CONTAINS
             call          open_data_set_sub  ( myIO = myIOHandles )
             call myData % read_file_type_inp ( myIO = myIOHandles )
 
-    end subroutine start_the_show
+    end subroutine get_data
 
     !   @   @   @      @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 

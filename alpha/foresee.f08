@@ -9,13 +9,15 @@
 program foresee
 
     use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_options
-    use mInputOutput,                   only : start_the_show
+    use mInputOutput,                   only : get_data
 
     implicit none
 
+    type ( KalmanData ) :: dataHAA
+
         write ( *, "( /, 'Running FORESEE ...' )" )
 
-        call start_the_show ( )
+        call get_data ( myData )
 
         write ( *, '( /, "Fortran compiler version: ", g0 )' ) compiler_version ()
         write ( *, '( /, "Fortran compilation options: ", g0, / )' ) compiler_options ()

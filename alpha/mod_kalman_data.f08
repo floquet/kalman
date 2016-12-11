@@ -12,7 +12,7 @@ module mKalmanData
     integer, parameter :: imp1 = 50, imp2 = 50
 
     ! variables
-    integer :: io_handle = stdout, io_status, record, k
+    integer :: io_handle = stdout, io_status, record!, k
     integer ( ip ) :: k_numDataPoints
 
     character ( len = 256 ) :: io_msg
@@ -33,9 +33,39 @@ module mKalmanData
         procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
     end type KalmanData
 
-    private :: read_file_type_inp_sub, allocator_sub
+    private :: read_file_type_inp_sub, allocator_sub, set_interval_sub
 
 contains
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    subroutine kalman_filter_sub ( me )
+
+        class ( KalmanData ), target :: me
+
+            call me % set_interval_sub ( )
+
+    end subroutine kalman_filter_sub
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    subroutine set_interval_sub ( me )
+
+        class ( KalmanData ), target :: me
+
+            ! LengthFilter \in [ 5, imp1 ]
+            me % LengthFilter =  min ( me % LengthFilter, imp1 ) ! enforce upper bound
+            me % LengthFilter =  max ( me % LengthFilter, 5 )    ! enforce lower bound
+
+            ! LengthPrediction \in [ 1, imp2 ]
+            me % LengthPrediction =  min ( me % LengthPrediction, imp2 ) ! enforce upper bound
+            me % LengthPrediction =  max ( me % LengthPrediction, 1 )    ! enforce lower bound
+
+            ! TestFactor \in [ 1.01, 10 ** 10 ]
+            me % TestFactor =  min ( me % TestFactor, 10.0_rp ** 10 ) ! enforce upper bound
+            me % TestFactor =  max ( me % TestFactor, 1.01_rp )       ! enforce lower bound
+
+    end subroutine set_interval_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
