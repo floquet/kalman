@@ -23,6 +23,8 @@ CONTAINS
     subroutine get_data ( myData )
 
         ! slot arguments
+        type ( KalmanData ) :: dataHAA
+        ! local variables
         type ( io_handles ) :: myIOHandles
 
             call          open_data_set_sub  ( myIO = myIOHandles )
