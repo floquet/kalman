@@ -17,7 +17,7 @@ module mKalmanData
     integer ( ip ) :: k_numDataPoints
 
     ! pointers
-    real ( rp ), pointer    :: pcmp_flattened ( : ), pcmp_diagonal ( : )
+    real ( rp ), pointer :: pcmp_flattened ( : ), pcmp_diagonal ( : )
 
     character ( len = 256 ) :: io_msg
 
