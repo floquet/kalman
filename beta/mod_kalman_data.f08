@@ -23,12 +23,12 @@ module mKalmanData
 
     type :: KalmanData
         ! rank 2
-        real ( rp ), allocatable :: pcm_p ( : , : )
+        real ( rp ), allocatable :: pcm_p ( : , : ), tmat ( : , : )
         ! rank 1
         real ( rp ), allocatable :: dv_x ( : ), gv_k ( : ), fv_f ( : )
         ! rank 0
         real ( rp ) :: q, r, baseline, TestFactor
-        real ( rp ) :: t_scalar, test0, test1
+        real ( rp ) :: t_scalar, test0, test1, rLengthFilter
 
         integer        :: LengthFilter, LengthPrediction
         integer ( ip ) :: numDataPoints
@@ -50,12 +50,26 @@ contains
 
         class ( KalmanData ), target :: me
 
-            write ( unit = io_handle, fmt = '( "inside analyze_data_sub ", g0, "." )' ) trim ( me % title )
+            !write ( unit = io_handle, fmt = '( "inside analyze_data_sub ", g0, "." )' ) trim ( me % title )
             call initialize_data_sub ( me )
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
-            me % t_scalar = dot_product ( dv_x, matmul ( pcm_p, dv_x ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
+            me % t_scalar = dot_product ( me % dv_x, matmul ( me % pcm_p, me % dv_x ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
             me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
-            me % test1 = me % test1 + me % q * real ( me % LengthFilter, rp )  !  [123]
+            me % test1 = me % test1 + me % q * me % rLengthFilter  !  [123]
+
+            ! scaling operations on line [126]
+            if ( me % test0 > me % TestFactor * me % test1 ) then
+                if ( me % q > 10.0_rp ** (-10) ) me % q = me % q * me % rLengthFilter / me % test0
+                if ( me % r > 10.0_rp ** (+10) ) me % r = me % r * me % test0         / me % rLengthFilter
+                me % test1 = me % test0
+            end if
+
+            ! line [132]
+            me % t_scalar = me % t_scalar + me % r
+            me % gv_k = matmul ( me % pcm_p, me % dv_x ) / me % t_scalar
+
+            me % tmat = dot_product ( me % gv_k, me % dv_x ) ! UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)  [140]
+            !PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J)
 
     end subroutine analyze_data_sub
 
@@ -74,7 +88,7 @@ contains
             me % gv_k = zero  !  [84]
 
             ! rank 0
-            me % test1 = real ( me % LengthFilter, rp )  !  [87]
+            me % test1 = me % rLengthFilter  !  [87]
 
     end subroutine initialize_data_sub
 
@@ -97,6 +111,7 @@ contains
             ! LengthFilter \in [ 5, imp1 ]
             me % LengthFilter =  min ( me % LengthFilter, imp1 ) ! enforce upper bound
             me % LengthFilter =  max ( me % LengthFilter, 5 )    ! enforce lower bound
+            me % rLengthFilter = real ( me % LengthFilter, rp )  ! saves on keyboqrding
 
             ! LengthPrediction \in [ 1, imp2 ]
             me % LengthPrediction =  min ( me % LengthPrediction, imp2 ) ! enforce upper bound

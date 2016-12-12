@@ -37,39 +37,35 @@ end program foresee
     ! battalions of the U. S. Army, Europe. He is retired in the grade of Colonel, A.U.S.
 
 
-! Wed Dec  7 14:41:21 CST 2016
-! rditldmt@ITLDMT-MD-O2034:alpha $ pwd
-! /Users/rditldmt/Documents/GitHub Desktop/kalman/alpha
-! rditldmt@ITLDMT-MD-O2034:alpha $ make
-! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
-! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
-! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_input_output.o mod_input_output.f08
-! mpifort -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o foresee.o foresee.f08
-! mpifort -g -o foresee foresee.o mod_file_handling.o mod_input_output.o mod_io_handles.o
-! rditldmt@ITLDMT-MD-O2034:alpha $ ./foresee haa
+! dantopa@Muntz-Szasz.local:beta $ date
+! Mon Dec 12 15:02:13 CST 2016
+! dantopa@Muntz-Szasz.local:beta $ pwd
+! /Users/dantopa/Documents/GitHub_desktop/kalman/beta
+! dantopa@Muntz-Szasz.local:beta $ make
+! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
+! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
+! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
+! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data.o mod_kalman_data.f08
+! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_input_output.o mod_input_output.f08
+! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o foresee.o foresee.f08
+! gfortran -g -o foresee foresee.o mod_file_handling.o mod_input_output.o mod_io_handles.o mod_kalman_data.o mod_set_precision.o
+! dantopa@Muntz-Szasz.local:beta $ ./foresee haa
 !
 ! Running FORESEE ...
-! harvesting command line...
-! The command line argument is haa.
-! File descriptor unit    -10 is opened in mode READ at position ASIS.
-! File descriptor unit    -10 is in the range of values allowed by the compiler.
-! File descriptor unit    -10 is named ../input_data/haa.inp.
-! File descriptor unit    -11 is opened in mode READ at position ASIS.
-! File descriptor unit    -11 is in the range of values allowed by the compiler.
-! File descriptor unit    -11 is named ../input_data/haa.out.
-! File descriptor unit    -12 is opened in mode READ at position ASIS.
-! File descriptor unit    -12 is in the range of values allowed by the compiler.
-! File descriptor unit    -12 is named ../input_data/haa.t.
-! File descriptor unit    -13 is opened in mode READ at position ASIS.
-! File descriptor unit    -13 is in the range of values allowed by the compiler.
-! File descriptor unit    -13 is named ../input_data/haa.p.
-! File descriptor unit    -14 is opened in mode READ at position ASIS.
-! File descriptor unit    -14 is in the range of values allowed by the compiler.
-! File descriptor unit    -14 is named ../input_data/haa.e.
-! STOP #  #  # successful completion for program foresee . . .
-
-! rditldmt@ITLDMT-MD-O2034:alpha $ gfortran --version
-! GNU Fortran (MacPorts gcc7 7-20161127_0) 7.0.0 20161127 (experimental)
-! Copyright (C) 2016 Free Software Foundation, Inc.
-! This is free software; see the source for copying conditions.  There is NO
-! warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+! Reading data for HAWAIAN AIRLINES - 1998 DAILY CLOSES.
+!  q, r =    1.0040000000000000       0.20499999999999999
+!  LengthFilter, LengthPrediction =            4           1
+!  baseline, TestFactor =    0.0000000000000000        9.9999999999999995E-008
+!  data point ( 1 ) =    3.6875000000000000
+!  last data point (                   224  ) =    3.2500000000000000
+!
+! Program received signal SIGSEGV: Segmentation fault - invalid memory reference.
+!
+! Backtrace for this error:
+! #0  0x10e3f7715
+! #1  0x10e3f6efa
+! #2  0x7fffdcd8ebb9
+! #3  0x10e3e8ead
+! #4  0x10e3e41b4
+! #5  0x10e3e8ef5
+! Segmentation fault: 11
