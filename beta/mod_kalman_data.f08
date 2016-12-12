@@ -17,7 +17,7 @@ module mKalmanData
     integer ( ip ) :: k_numDataPoints
 
     ! pointers
-    real ( rp ), pointer     :: pcmp_flattened ( : ), pcmp_diagonal ( : )
+    real ( rp ), pointer    :: pcmp_flattened ( : ), pcmp_diagonal ( : )
 
     character ( len = 256 ) :: io_msg
 
@@ -28,10 +28,11 @@ module mKalmanData
         real ( rp ), allocatable :: dv_x ( : ), gv_k ( : ), fv_f ( : )
         ! rank 0
         real ( rp ) :: q, r, baseline, TestFactor
-        real ( rp ) :: x
+        real ( rp ) :: t_scalar, test0, test1
+
         integer        :: LengthFilter, LengthPrediction
-        integer        :: test1
         integer ( ip ) :: numDataPoints
+
         character ( len = 128 ) :: title
     contains
         private
@@ -51,7 +52,10 @@ contains
 
             write ( unit = io_handle, fmt = '( "inside analyze_data_sub ", g0, "." )' ) trim ( me % title )
             call initialize_data_sub ( me )
-            pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [51]
+            pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
+            me % t_scalar = dot_product ( dv_x, matmul ( pcm_p, dv_x ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
+            me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
+            me % test1 = me % test1 + me % q * real ( me % LengthFilter, rp )  !  [123]
 
     end subroutine analyze_data_sub
 
@@ -70,7 +74,7 @@ contains
             me % gv_k = zero  !  [84]
 
             ! rank 0
-            me % test1 = me % LengthFilter  !  [87]
+            me % test1 = real ( me % LengthFilter, rp )  !  [87]
 
     end subroutine initialize_data_sub
 
