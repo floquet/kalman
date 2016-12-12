@@ -1,5 +1,5 @@
 # Find all source files, create a list of corresponding object files
-PROGRAM = foresee
+PROGRAM = forsee
 
 EXT = f08
 # Find all source files, create a list of corresponding object files
