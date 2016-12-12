@@ -140,7 +140,7 @@ contains
 
             ! read data from the *.inp file
             read ( unit = myIO % inp, fmt = '( A )', iostat = io_status, iomsg = io_msg  ) me % title
-                if ( io_status /= 0 ) then
+            if ( io_status /= 0 ) then
                 write ( io_handle, 100 ) 'READ', io_status, trim ( io_msg )
                 call find_IU_info ( myIO % inp )
                 stop '! ! !  Fatal error'
@@ -157,9 +157,9 @@ contains
             read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
             read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % baseline, me % TestFactor
 
-            print *, 'q, r = ', me % q, me % r
-            print *, 'LengthFilter, LengthPrediction = ', me % LengthFilter, me % LengthPrediction
-            print *, 'baseline, TestFactor = ', me % baseline, me % TestFactor
+            ! print *, 'q, r = ', me % q, me % r
+            ! print *, 'LengthFilter, LengthPrediction = ', me % LengthFilter, me % LengthPrediction
+            ! print *, 'baseline, TestFactor = ', me % baseline, me % TestFactor
 
             ! measure the length of the data, allocate memory, then read the data
             read ( unit = myIO % inp, iostat = io_status, iomsg = io_msg  ) ! skip comment line
