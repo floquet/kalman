@@ -186,7 +186,7 @@ CONTAINS
     FUNCTION close_and_keep_scratchfile(fd) RESULT(filename)
         IMPLICIT NONE
         INTEGER, INTENT(IN)                           :: fd
-        CHARACTER(LEN=256)                              :: filename
+        CHARACTER(LEN=256)                            :: filename
         LOGICAL                                       :: named, opened
 
             INQUIRE(UNIT=fd, NAMED=named, OPENED=opened)
