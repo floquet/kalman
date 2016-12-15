@@ -68,7 +68,9 @@ contains
             me % t_scalar = me % t_scalar + me % r
             me % gv_k = matmul ( me % pcm_p, me % dv_x ) / me % t_scalar
 
+            print *, 'ping'
             me % tmat = dot_product ( me % gv_k, me % dv_x ) ! UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)  [140]
+            print *, 'pong'
             !PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J)
 
     end subroutine analyze_data_sub
@@ -157,10 +159,6 @@ contains
             read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
             read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % baseline, me % TestFactor
 
-            ! print *, 'q, r = ', me % q, me % r
-            ! print *, 'LengthFilter, LengthPrediction = ', me % LengthFilter, me % LengthPrediction
-            ! print *, 'baseline, TestFactor = ', me % baseline, me % TestFactor
-
             ! measure the length of the data, allocate memory, then read the data
             read ( unit = myIO % inp, iostat = io_status, iomsg = io_msg  ) ! skip comment line
 
@@ -179,6 +177,7 @@ contains
             advance_pointer : do k_numDataPoints = 1, 8
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
             end do advance_pointer
+
             read_data_points : do k_numDataPoints = 1, me % numDataPoints
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
                 !write ( * , '( g0, ": ", g0 )' ) k_numDataPoints, me % dv_x ( k_numDataPoints )
@@ -205,7 +204,18 @@ contains
             ! rank 2
             allocate ( me % pcm_p ( 1 : me % numDataPoints, 1 : me % numDataPoints ), stat = stat, errmsg = errmsg )
             if ( stat /= 0 ) then
-                write ( io_handle, 100 ) ''
+                write ( io_handle, 100 ) '', 'pcm_p'
+                write ( io_handle, 110 ) me % numDataPoints
+                write ( io_handle, 120 ) trim ( errmsg )
+                write ( io_handle, 130 ) stat
+                flush ( io_handle )
+                stop '!  !  !  fatal program error during allocation'
+            end if
+            me % pcm_p ( : , : ) = zero ! populate
+
+            allocate ( me % pcm_p ( 1 : me % numDataPoints, 1 : me % numDataPoints ), stat = stat, errmsg = errmsg )
+            if ( stat /= 0 ) then
+                write ( io_handle, 100 ) '', 'pcm_p'
                 write ( io_handle, 110 ) me % numDataPoints
                 write ( io_handle, 120 ) trim ( errmsg )
                 write ( io_handle, 130 ) stat
