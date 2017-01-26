@@ -11,17 +11,30 @@ program foresee
     use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_options
     use mKalmanData,                    only : KalmanData
     use mInputOutput,                   only : get_data
+    use mTimeStamp,                     only : timestamp
 
     implicit none
 
+    ! rank 0
+    real ( rp ) :: cpu_time_start = zero, cpu_time_stop = zero, cpu_time_elapsed = zero
+
     type ( KalmanData ) :: dataHAA
 
-        write ( *, "( /, 'Running FORESEE ...' )" )
+        call cpu_time ( cpu_time_start )
 
-        call get_data               ( myData = dataHAA )
-        call dataHAA % analyze_data ( )
+            write ( *, "( /, 'Running FORESEE ...' )" )
 
-        write ( *, '( /, "Fortran compiler version: ", g0 )' ) compiler_version ()
+            call get_data ( myData = dataHAA )
+            call dataHAA % analyze_data ( )
+
+        call cpu_time ( cpu_time_stop  )
+        cpu_time_elapsed = cpu_time_stop - cpu_time_start
+
+        write ( stdout, * )
+        write ( stdout, fmt_generic ) 'cpu seconds: ', cpu_time_elapsed
+        write ( stdout, fmt_generic ) 'timestamp: ', timestamp ( )
+
+        write ( *, '( /, "Fortran compiler version: ", g0 )' )       compiler_version ()
         write ( *, '( /, "Fortran compilation options: ", g0, / )' ) compiler_options ()
 
     stop '#  #  # successful completion for program foresee . . .'

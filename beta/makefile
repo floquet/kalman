@@ -56,11 +56,13 @@ clean:
 $(PRG_OBJ) : $(MOD_OBJS)
 
 # module interdependencies
+mod_constants.o           : mod_set_precision.o
 mod_file_handling.o       :
 mod_io_handles.o          :
 mod_input_output.o        : mod_file_handling.o mod_io_handles.o mod_kalman_data.o
 mod_kalman_data.o         : mod_file_handling.o mod_io_handles.o mod_set_precision.o
 mod_set_precision.o       :
+mod_time_stamp.o          :
 
 
 # dantopa@Muntz-Szasz.local:beta $ date
