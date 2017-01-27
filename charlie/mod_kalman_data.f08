@@ -34,10 +34,10 @@ module mKalmanData
         character ( len = 128 ) :: title
     contains
         private
-        procedure, public :: allocator           =>  allocator_sub
-        procedure, public :: analyze_data        =>  analyze_data_sub
-        procedure, public :: housekeeping        =>  housekeeping_sub
-        procedure, public :: get_data            =>  get_data_sub
+        procedure, public :: allocator      =>  allocator_sub
+        procedure, public :: analyze_data   =>  analyze_data_sub
+        procedure, public :: housekeeping   =>  housekeeping_sub
+        procedure, public :: get_data       =>  get_data_sub
         !procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
     end type KalmanData
 
@@ -120,11 +120,15 @@ contains
 
             ! rank 2
             me % pcm_p ( : , : ) = zero ! needed? populated at allocation time [78]
+            print *, 'beep'
+            print *, 'associated ( pcmp_diagonal ) = ', associated ( pcmp_diagonal )
             pcmp_diagonal ( : )  = one  ! [85]
+            print *, 'bang'
 
             ! rank 1
-            me % fv_f = zero  !  [83]
-            me % gv_k = zero  !  [84]
+            me % fv_f ( : ) = zero  !  [83]
+            print *, 'buzz'
+            me % gv_k ( : ) = zero  !  [84]
 
             ! rank 0
             me % test1 = me % rLengthFilter  !  [87]

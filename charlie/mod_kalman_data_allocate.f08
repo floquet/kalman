@@ -18,11 +18,6 @@ submodule ( mKalmanData ) smKalmanDataAllocate
 
             call allocator_sub ( me ) ! allocate all arrays
 
-            ! pointer to diagonal elements
-            ! Metcalf, Cohen, Reid, figure 20.5, p. 364
-            pcmp_flattened ( 1 : me % numDataPoints * me % numDataPoints ) => me % pcm_p ( : , : )
-            pcmp_diagonal  => pcmp_flattened ( :: me % numDataPoints + 1 )
-
     end subroutine housekeeping_sub
 
     !  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =
@@ -33,6 +28,15 @@ submodule ( mKalmanData ) smKalmanDataAllocate
 
             ! rank 2
             call allocate_rank_2_rp_sub ( me % pcm_p, me % numDataPoints, me % numDataPoints )
+
+            ! pointer to diagonal elements
+            ! Metcalf, Cohen, Reid, figure 20.5, p. 364
+            pcmp_flattened ( 1 : me % numDataPoints * me % numDataPoints ) => me % pcm_p ( : , : )
+            pcmp_diagonal  => pcmp_flattened ( :: me % numDataPoints + 1 )
+
+            write ( stdout, fmt_generic ) 'associated ( pcmp_flattened ) = ', associated ( pcmp_flattened )
+            write ( stdout, fmt_generic ) 'associated ( pcmp_diagonal    = ', associated ( pcmp_diagonal )
+
             call allocate_rank_2_rp_sub ( me % tmat,  me % numDataPoints, me % numDataPoints )
             ! rank 1
             call allocate_rank_1_rp_sub ( me % dv_x, me % numDataPoints )
