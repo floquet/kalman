@@ -92,8 +92,6 @@ contains
 
     subroutine open_data_set_sub ( myIO )  ! open file handle to inout and output files
 
-        !class ( KalmanData ), target :: me
-
         ! slot arguments
         type ( io_handles ), intent ( out ) :: myIO
 

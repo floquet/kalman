@@ -36,42 +36,23 @@ module mKalmanData
         private
         procedure, public :: allocator      =>  allocator_sub
         procedure, public :: analyze_data   =>  analyze_data_sub
-        procedure, public :: housekeeping   =>  housekeeping_sub
         procedure, public :: get_data       =>  get_data_sub
-        !procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
     end type KalmanData
 
     private :: allocator_sub
+    private :: analyze_data_sub
     private :: get_data_sub
-    private :: housekeeping_sub
-    private :: initialize_data_sub
-    !private :: read_file_type_inp_sub
     !private :: set_interval_sub
 
     interface
-
-        ! subroutine harvest_command_line_sub ( FileNameStem, LenCommandArgument )
-        !     integer,                 intent ( out ) :: LenCommandArgument
-        !     character ( len = 128 ), intent ( out ) :: FileNameStem
-        ! end subroutine harvest_command_line_sub
 
         module subroutine allocator_sub ( me )
             class ( KalmanData ), target :: me
         end subroutine allocator_sub
 
-        module subroutine housekeeping_sub ( me )
-            class ( KalmanData ), target :: me
-        end subroutine housekeeping_sub
-
         module subroutine get_data_sub ( me )
             class ( KalmanData ), target :: me
         end subroutine get_data_sub
-
-        ! module subroutine read_file_type_inp_sub ( me, myIO )
-        !     class ( KalmanData ), target :: me
-        !     !import :: io_handles
-        !     type ( io_handles ), intent ( in ) :: myIO
-        ! end subroutine read_file_type_inp_sub
 
     end interface
 
@@ -87,7 +68,6 @@ contains
 
         class ( KalmanData ), target :: me
 
-            !write ( unit = io_handle, fmt = '( "inside analyze_data_sub ", g0, "." )' ) trim ( me % title )
             call initialize_data_sub ( me )
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
             me % t_scalar = dot_product ( me % dv_x, matmul ( me % pcm_p, me % dv_x ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
@@ -105,9 +85,7 @@ contains
             me % t_scalar = me % t_scalar + me % r
             me % gv_k = matmul ( me % pcm_p, me % dv_x ) / me % t_scalar
 
-            print *, 'ping'
             me % tmat = dot_product ( me % gv_k, me % dv_x ) ! UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)  [140]
-            print *, 'pong'
             !PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J)
 
     end subroutine analyze_data_sub
@@ -120,14 +98,10 @@ contains
 
             ! rank 2
             me % pcm_p ( : , : ) = zero ! needed? populated at allocation time [78]
-            print *, 'beep'
-            print *, 'associated ( pcmp_diagonal ) = ', associated ( pcmp_diagonal )
             pcmp_diagonal ( : )  = one  ! [85]
-            print *, 'bang'
 
             ! rank 1
             me % fv_f ( : ) = zero  !  [83]
-            print *, 'buzz'
             me % gv_k ( : ) = zero  !  [84]
 
             ! rank 0

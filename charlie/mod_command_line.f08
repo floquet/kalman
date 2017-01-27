@@ -7,8 +7,6 @@ module mCommandLine
 
     integer :: io_handle = stdout
 
-    !private :: harvest_command_line_sub
-
 contains
     ! harvest_command_line_sub
 
