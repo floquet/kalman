@@ -56,23 +56,52 @@ clean:
 $(PRG_OBJ) : $(MOD_OBJS)
 
 # module interdependencies
+mod_command_line.o        : mod_constants.o
 mod_constants.o           : mod_set_precision.o
 mod_file_handling.o       :
 mod_io_handles.o          :
 mod_command_line.o        : mod_constants.o
-mod_kalman_data.o         : mod_constants.o mod_set_precision.o mod_file_handling.o mod_io_handles.o
+mod_kalman_data.o         : mod_command_line.o mod_constants.o mod_io_handles.o mod_set_precision.o mod_file_handling.o
 mod_set_precision.o       :
 mod_time_stamp.o          :
 
 
-# dantopa@Muntz-Szasz.local:beta $ date
-# Mon Dec 12 15:01:43 CST 2016
-# dantopa@Muntz-Szasz.local:beta $ pwd
-# /Users/dantopa/Documents/GitHub_desktop/kalman/beta
-# dantopa@Muntz-Szasz.local:beta $ make debug
-# PROGRAM  = foresee
-# PRG_OBJ  = foresee.o
-# SRCS     = foresee.f08 mod_file_handling.f08 mod_input_output.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_set_precision.f08
-# OBJS     = foresee.o mod_file_handling.o mod_input_output.o mod_io_handles.o mod_kalman_data.o mod_set_precision.o
-# MODS     = mod_file_handling.f08 mod_input_output.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_set_precision.f08
-# MOD_OBJS = mod_file_handling.o mod_input_output.o mod_io_handles.o mod_kalman_data.o mod_set_precision.o
+# rditldmt@ITLDMT-MD-O2034:charlie $ date
+# Fri Jan 27 14:16:28 CST 2017
+
+# rditldmt@ITLDMT-MD-O2034:charlie $ pwd
+# /Users/rditldmt/Documents/GitHub_Desktop/kalman/charlie
+
+# rditldmt@ITLDMT-MD-O2034:charlie $ echo $gflags
+# -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only
+
+# rditldmt@ITLDMT-MD-O2034:charlie $ make debug
+# PROGRAM  = forsee
+# PRG_OBJ  = forsee.o
+# SRCS     = forsee.f08 mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_set_precision.f08 mod_time_stamp.f08
+# OBJS     = forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
+# MODS     = mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_set_precision.f08 mod_time_stamp.f08
+# MOD_OBJS = mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
+
+# rditldmt@ITLDMT-MD-O2034:charlie $ make
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_constants.o mod_constants.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_command_line.o mod_command_line.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data.o mod_kalman_data.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data_allocate.o mod_kalman_data_allocate.f08
+# mod_kalman_data_allocate.f08:2:23:
+#
+#  submodule ( mKalmanData ) smKalmanDataAllocate
+#                        1
+# Warning: USE statement at (1) has no ONLY qualifier [-Wuse-without-only]
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data_read.o mod_kalman_data_read.f08
+# mod_kalman_data_read.f08:2:23:
+#
+#  submodule ( mKalmanData ) smKalmanDataRead
+#                        1
+# Warning: USE statement at (1) has no ONLY qualifier [-Wuse-without-only]
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_time_stamp.o mod_time_stamp.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o forsee.o forsee.f08
+# gfortran -g -o forsee forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o

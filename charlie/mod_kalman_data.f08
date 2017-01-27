@@ -1,7 +1,9 @@
 !23456789 123456789 223456789 323456789 423456789 523456789 623456789 723456789 823456789 923456789 023456789 123456789 223456789 32
 module mKalmanData
 
+    use mCommandLine,                   only : harvest_command_line_sub
     use mConstants,                     only : one, zero, stdout, fmt_generic
+    use mIOHandles,                     only : io_handles
     use mSetPrecision,                  only : ip, rp
 
     implicit none
@@ -35,16 +37,23 @@ module mKalmanData
         procedure, public :: allocator           =>  allocator_sub
         procedure, public :: analyze_data        =>  analyze_data_sub
         procedure, public :: housekeeping        =>  housekeeping_sub
+        procedure, public :: get_data            =>  get_data_sub
         !procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
     end type KalmanData
 
-    !private :: allocator_sub
+    private :: allocator_sub
+    private :: get_data_sub
     private :: housekeeping_sub
     private :: initialize_data_sub
     !private :: read_file_type_inp_sub
-    private :: set_interval_sub
+    !private :: set_interval_sub
 
     interface
+
+        ! subroutine harvest_command_line_sub ( FileNameStem, LenCommandArgument )
+        !     integer,                 intent ( out ) :: LenCommandArgument
+        !     character ( len = 128 ), intent ( out ) :: FileNameStem
+        ! end subroutine harvest_command_line_sub
 
         module subroutine allocator_sub ( me )
             class ( KalmanData ), target :: me
@@ -53,6 +62,16 @@ module mKalmanData
         module subroutine housekeeping_sub ( me )
             class ( KalmanData ), target :: me
         end subroutine housekeeping_sub
+
+        module subroutine get_data_sub ( me )
+            class ( KalmanData ), target :: me
+        end subroutine get_data_sub
+
+        ! module subroutine read_file_type_inp_sub ( me, myIO )
+        !     class ( KalmanData ), target :: me
+        !     !import :: io_handles
+        !     type ( io_handles ), intent ( in ) :: myIO
+        ! end subroutine read_file_type_inp_sub
 
     end interface
 

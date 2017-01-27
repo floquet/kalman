@@ -9,8 +9,10 @@
 program foresee
 
     use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_options
+
+    use mConstants,                     only : zero, stdout, fmt_generic
     use mKalmanData,                    only : KalmanData
-    use mCommandLine,                   only : get_data
+    use mSetPrecision,                  only : rp
     use mTimeStamp,                     only : timestamp
 
     implicit none
@@ -50,35 +52,50 @@ end program foresee
     ! battalions of the U. S. Army, Europe. He is retired in the grade of Colonel, A.U.S.
 
 
-! dantopa@Muntz-Szasz.local:beta $ date
-! Mon Dec 12 15:02:13 CST 2016
-! dantopa@Muntz-Szasz.local:beta $ pwd
-! /Users/dantopa/Documents/GitHub_desktop/kalman/beta
-! dantopa@Muntz-Szasz.local:beta $ make
-! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
-! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
-! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
-! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data.o mod_kalman_data.f08
-! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_input_output.o mod_input_output.f08
-! gfortran -c -g -ffpe-trap=denormal -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o foresee.o foresee.f08
-! gfortran -g -o foresee foresee.o mod_file_handling.o mod_input_output.o mod_io_handles.o mod_kalman_data.o mod_set_precision.o
-! dantopa@Muntz-Szasz.local:beta $ ./foresee haa
+! rditldmt@ITLDMT-MD-O2034:charlie $ date
+! Fri Jan 27 14:20:40 CST 2017
+
+! rditldmt@ITLDMT-MD-O2034:charlie $ pwd
+! /Users/rditldmt/Documents/GitHub_Desktop/kalman/charlie
+
+! rditldmt@ITLDMT-MD-O2034:charlie $ make
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_constants.o mod_constants.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_command_line.o mod_command_line.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data.o mod_kalman_data.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data_allocate.o mod_kalman_data_allocate.f08
+! mod_kalman_data_allocate.f08:2:23:
+!
+!  submodule ( mKalmanData ) smKalmanDataAllocate
+!                        1
+! Warning: USE statement at (1) has no ONLY qualifier [-Wuse-without-only]
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data_read.o mod_kalman_data_read.f08
+! mod_kalman_data_read.f08:2:23:
+!
+!  submodule ( mKalmanData ) smKalmanDataRead
+!                        1
+! Warning: USE statement at (1) has no ONLY qualifier [-Wuse-without-only]
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_time_stamp.o mod_time_stamp.f08
+! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o forsee.o forsee.f08
+! gfortran -g -o forsee forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
+
+! rditldmt@ITLDMT-MD-O2034:charlie $ ./forsee haa
 !
 ! Running FORESEE ...
 ! Reading data for HAWAIAN AIRLINES - 1998 DAILY CLOSES.
-!  q, r =    1.0040000000000000       0.20499999999999999
-!  LengthFilter, LengthPrediction =            4           1
-!  baseline, TestFactor =    0.0000000000000000        9.9999999999999995E-008
-!  data point ( 1 ) =    3.6875000000000000
-!  last data point (                   224  ) =    3.2500000000000000
+! data point ( 1 ) = 3.6875000000000000
+! last data point ( 224 ) = 3.2500000000000000
 !
 ! Program received signal SIGSEGV: Segmentation fault - invalid memory reference.
 !
 ! Backtrace for this error:
-! #0  0x10e3f7715
-! #1  0x10e3f6efa
-! #2  0x7fffdcd8ebb9
-! #3  0x10e3e8ead
-! #4  0x10e3e41b4
-! #5  0x10e3e8ef5
+! #0  0x10ac41045
+! #1  0x10ac4082a
+! #2  0x7fff90f9b529
+! #3  0x10ac2fcac
+! #4  0x10ac302db
+! #5  0x10ac2d932
+! #6  0x10ac327f7
 ! Segmentation fault: 11

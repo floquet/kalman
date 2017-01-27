@@ -3,8 +3,7 @@ submodule ( mKalmanData ) smKalmanDataRead
 
     use, intrinsic :: iso_fortran_env,  only : iostat_end
 
-    use mFileHandling,                  only : find_IU_info
-    use mIOHandles,                     only : io_handles
+    use mFileHandling,                  only : safeopen_readonly, find_IU_info
 
     integer :: io_status
     character ( len = 256 )          :: io_msg
@@ -17,7 +16,7 @@ contains
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
-    subroutine get_data_sub ( )
+    subroutine get_data_sub ( me )
 
         class ( KalmanData ), target :: me
 
@@ -25,7 +24,7 @@ contains
         type ( io_handles ) :: myIOHandles
 
             call open_data_set_sub      ( myIO = myIOHandles )
-            call read_file_type_inp_sub ( myIO = myIOHandles )
+            call read_file_type_inp_sub ( me, myIO = myIOHandles )
 
     end subroutine get_data_sub
 
@@ -43,7 +42,7 @@ contains
             if ( io_status /= 0 ) then
                 write ( io_handle, 100 ) 'READ', io_status, trim ( io_msg )
                 call find_IU_info ( myIO % inp )
-                stop '! ! !  Fatal error'
+                stop error_fatal
             end if
 
             write ( unit = io_handle, fmt = '( "Reading data for ", g0, "." )' ) trim ( me % title )
@@ -68,7 +67,7 @@ contains
                 me % numDataPoints = me % numDataPoints + 1
             end do count_data_points
 
-            call me % allocator_sub ( me )
+            call allocator_sub ( me )
 
             ! read data points
             rewind ( myIO % inp )
@@ -78,11 +77,10 @@ contains
 
             read_data_points : do k_numDataPoints = 1, me % numDataPoints
                 read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
-                !write ( * , '( g0, ": ", g0 )' ) k_numDataPoints, me % dv_x ( k_numDataPoints )
             end do read_data_points
 
-            print *, 'data point ( 1 ) = ', me % dv_x ( 1 )
-            print *, 'last data point ( ', me % numDataPoints,' ) = ', me % dv_x ( me % numDataPoints )
+            write ( stdout, fmt_generic ) 'data point ( 1 ) = ', me % dv_x ( 1 )
+            write ( stdout, fmt_generic ) 'last data point ( ', me % numDataPoints,' ) = ', me % dv_x ( me % numDataPoints )
 
         return
 
@@ -90,7 +88,7 @@ contains
 
     end subroutine read_file_type_inp_sub
 
-    !   @   @   @      @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+    !   @   @   @   @  @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
     subroutine open_data_set_sub ( myIO )  ! open file handle to inout and output files
 
@@ -102,14 +100,16 @@ contains
         ! local variables
         integer :: FileNameLen
         character ( len = 128 ) :: FileNameStem
+        character ( len = 256 ) :: FullName
 
             call harvest_command_line_sub ( FileNameStem = FileNameStem, LenCommandArgument  = FileNameLen )
+            FullName = PathData // FileNameStem ( 1 : FileNameLen )
 
-            myIO % inp = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.inp' )
-            myIO % out = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.out' )
-            myIO % t   = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.t' )
-            myIO % p   = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.p' )
-            myIO % e   = safeopen_readonly ( PathData // FileNameStem ( 1 : FileNameLen ) // '.e' )
+            myIO % inp = safeopen_readonly ( trim ( FullName ) // '.inp' )
+            myIO % out = safeopen_readonly ( trim ( FullName ) // '.out' )
+            myIO % t   = safeopen_readonly ( trim ( FullName ) // '.t' )
+            myIO % p   = safeopen_readonly ( trim ( FullName ) // '.p' )
+            myIO % e   = safeopen_readonly ( trim ( FullName ) // '.e' )
 
     end subroutine open_data_set_sub
 
