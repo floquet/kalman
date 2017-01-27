@@ -1,14 +1,14 @@
 !23456789 123456789 223456789 323456789 423456789 523456789 623456789 723456789 823456789 923456789 023456789 123456789 223456789 32
 module mKalmanData
 
-    use mConstants,                     only : zero, stdout, fmt_generic
-    use mIOHandles,                     only : io_handles
+    use mConstants,                     only : one, zero, stdout, fmt_generic
     use mSetPrecision,                  only : ip, rp
 
     implicit none
 
     ! parameters
     integer, parameter :: imp1 = 50, imp2 = 50
+    character ( len = * ), parameter :: error_fatal = 'Fatal error in module "mKalmanData"...'
 
     ! variables
     integer        :: io_handle = stdout, record
@@ -32,18 +32,23 @@ module mKalmanData
         character ( len = 128 ) :: title
     contains
         private
+        procedure, public :: allocator           =>  allocator_sub
         procedure, public :: analyze_data        =>  analyze_data_sub
         procedure, public :: housekeeping        =>  housekeeping_sub
-        procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
+        !procedure, public :: read_file_type_inp  =>  read_file_type_inp_sub
     end type KalmanData
 
-    private :: allocator_sub
+    !private :: allocator_sub
     private :: housekeeping_sub
     private :: initialize_data_sub
-    private :: read_file_type_inp_sub
+    !private :: read_file_type_inp_sub
     private :: set_interval_sub
 
     interface
+
+        module subroutine allocator_sub ( me )
+            class ( KalmanData ), target :: me
+        end subroutine allocator_sub
 
         module subroutine housekeeping_sub ( me )
             class ( KalmanData ), target :: me
@@ -52,6 +57,10 @@ module mKalmanData
     end interface
 
 contains
+    ! analyze_data_sub
+    ! initialize_data_sub
+    ! kalman_filter_sub
+    ! set_interval_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 

@@ -14,7 +14,7 @@ submodule ( mKalmanData ) smKalmanDataAllocate
 
     module subroutine housekeeping_sub ( me ) ! allocate, initialize, pointer to diagonal
 
-        class ( fields ), target :: me
+        class ( KalmanData ), target :: me
 
             call allocator_sub ( me ) ! allocate all arrays
 
@@ -29,7 +29,7 @@ submodule ( mKalmanData ) smKalmanDataAllocate
 
     module subroutine allocator_sub ( me )
 
-        class ( fields ), target :: me
+        class ( KalmanData ), target :: me
 
             ! rank 2
             call allocate_rank_2_rp_sub ( me % pcm_p, me % numDataPoints, me % numDataPoints )
@@ -57,7 +57,7 @@ submodule ( mKalmanData ) smKalmanDataAllocate
                                                                                      length2, ' elements, type real ( rp ).'
                 write ( stdout, fmt_generic ) 'Error message: ', trim ( alloc_message ), '.'
                 write ( stdout, fmt_generic ) 'Error number:  ', alloc_status, '.'
-                    stop error_fatal
+                stop error_fatal
                 end if
             end if
 

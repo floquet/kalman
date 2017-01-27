@@ -10,7 +10,7 @@ program foresee
 
     use, intrinsic :: iso_fortran_env,  only : compiler_version, compiler_options
     use mKalmanData,                    only : KalmanData
-    use mInputOutput,                   only : get_data
+    use mCommandLine,                   only : get_data
     use mTimeStamp,                     only : timestamp
 
     implicit none
