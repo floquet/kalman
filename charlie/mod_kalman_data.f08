@@ -70,7 +70,7 @@ contains
 
             call initialize_data_sub ( me )
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
-            me % t_scalar = dot_product ( me % dv_x, matmul ( me % pcm_p, me % dv_x ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
+            me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
             me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
             me % test1 = me % test1 + me % q * me % rLengthFilter  !  [123]
 
@@ -83,10 +83,11 @@ contains
 
             ! line [132]
             me % t_scalar = me % t_scalar + me % r
-            me % gv_k = matmul ( me % pcm_p, me % dv_x ) / me % t_scalar
+            me % gv_k ( : ) = matmul ( me % pcm_p  ( : , : ), me % dv_x ( : ) ) / me % t_scalar
 
-            me % tmat = dot_product ( me % gv_k, me % dv_x ) ! UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)  [140]
-            !PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J)
+            ! create a rank 0 matrix tmat
+            me % tmat  ( : , : ) = dot_product ( me % gv_k, me % dv_x ( : ) ) ! UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)  [140]
+            me % pcm_p ( : , : ) = me % pcm_p ( : , : ) - matmul ( me % pcm_p ( : , : ), me % tmat ( : , : ) )  ! PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J)
 
     end subroutine analyze_data_sub
 

@@ -45,6 +45,10 @@ module mKalmanData
 
     interface
 
+        module subroutine allocator_sub ( me )
+            class ( fields ), target :: me
+        end subroutine allocator_sub
+
         module subroutine housekeeping_sub ( me )
             class ( KalmanData ), target :: me
         end subroutine housekeeping_sub
