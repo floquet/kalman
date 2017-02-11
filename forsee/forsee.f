@@ -22,7 +22,7 @@ C
       OPEN(IPLT1,FILE=FNAME(K1:K2)//'.T',STATUS='UNKNOWN')
       OPEN(IPLT2,FILE=FNAME(K1:K2)//'.P',STATUS='UNKNOWN')
       OPEN(IPLT3,FILE=FNAME(K1:K2)//'.E',STATUS='UNKNOWN')
-      CALL READIN(1,IIN,IOUT,IPLT1,IPLT2,IPLT3)      
+      CALL READIN(1,IIN,IOUT,IPLT1,IPLT2,IPLT3)
 C
 C     INITIALIZE VARIABLES
 C
@@ -39,7 +39,7 @@ C
       END
 C **********************************************************************
 C *                                                                    *
-C *   SUBROUTINE DCHARP - TO DETERMINE THE CHARACTER POSITIONS         * 
+C *   SUBROUTINE DCHARP - TO DETERMINE THE CHARACTER POSITIONS         *
 C *                                                                    *
 C **********************************************************************
       subroutine dcharp(cstring,length,k1,k2)
@@ -181,7 +181,7 @@ C     *****************************************************************
       ERROR = TRUE_X-PRED_X
 C
       WRITE(IOUT,10)ICOUNT,TRUE_X,PRED_X,ERROR,QCOEFF,RCOEFF
-      WRITE(*,10)ICOUNT,TRUE_X,PRED_X,ERROR,QCOEFF,RCOEFF 
+      WRITE(*,10)ICOUNT,TRUE_X,PRED_X,ERROR,QCOEFF,RCOEFF
       WRITE(IPLT1,10)ICOUNT,TRUE_X
       WRITE(IPLT2,10)ICOUNT,PRED_X
       WRITE(IPLT3,10)ICOUNT,ERROR
