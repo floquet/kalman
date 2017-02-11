@@ -26,6 +26,7 @@ program foresee
 
             write ( *, "( /, 'Running FORESEE ...' )" )
 
+            ! HAA Hawaiian Airlines
             call dataHAA % get_data ( )
             call dataHAA % analyze_data ( )
 
@@ -52,13 +53,13 @@ end program foresee
     ! battalions of the U. S. Army, Europe. He is retired in the grade of Colonel, A.U.S.
 
 
-! rditldmt@ITLDMT-MD-O2034:charlie $ date
-! Fri Jan 27 14:20:40 CST 2017
+! dantopa@Muntz-Szasz.local:charlie $ date
+! Sat Feb 11 15:46:47 CST 2017
 
-! rditldmt@ITLDMT-MD-O2034:charlie $ pwd
-! /Users/rditldmt/Documents/GitHub_Desktop/kalman/charlie
+! dantopa@Muntz-Szasz.local:charlie $ pwd
+! /Users/dantopa/Documents/GitHub_desktop/kalman/charlie
 
-! rditldmt@ITLDMT-MD-O2034:charlie $ make
+! dantopa@Muntz-Szasz.local:charlie $ make
 ! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
 ! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_constants.o mod_constants.f08
 ! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_command_line.o mod_command_line.f08
@@ -81,21 +82,18 @@ end program foresee
 ! gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o forsee.o forsee.f08
 ! gfortran -g -o forsee forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
 
-! rditldmt@ITLDMT-MD-O2034:charlie $ ./forsee haa
+! dantopa@Muntz-Szasz.local:charlie $ ./forsee haa
 !
 ! Running FORESEE ...
 ! Reading data for HAWAIAN AIRLINES - 1998 DAILY CLOSES.
 ! data point ( 1 ) = 3.6875000000000000
 ! last data point ( 224 ) = 3.2500000000000000
 !
-! Program received signal SIGSEGV: Segmentation fault - invalid memory reference.
+! cpu seconds: 0.49699999999999996E-002
+! timestamp: 2017-02-11  15:47:07  UCT-0600
 !
-! Backtrace for this error:
-! #0  0x10ac41045
-! #1  0x10ac4082a
-! #2  0x7fff90f9b529
-! #3  0x10ac2fcac
-! #4  0x10ac302db
-! #5  0x10ac2d932
-! #6  0x10ac327f7
-! Segmentation fault: 11
+! Fortran compiler version: GCC version 7.0.1 20170205 (experimental)
+!
+! Fortran compilation options: -fPIC -feliminate-unused-debug-symbols -mmacosx-version-min=10.12.4 -mtune=core2 -auxbase-strip forsee.o -g -Og -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Wpedantic -Wuse-without-only -ffpe-trap=denormal,invalid,zero -fbacktrace -fcheck=bounds -fmax-errors=5
+!
+! STOP #  #  # successful completion for program foresee . . .

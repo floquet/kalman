@@ -27,6 +27,7 @@ module mKalmanData
         ! rank 0
         real ( rp ) :: q, r, baseline, TestFactor
         real ( rp ) :: t_scalar, test0, test1, rLengthFilter
+        real ( rp ) :: pred_x, true_x
 
         integer        :: LengthFilter, LengthPrediction
         integer ( ip ) :: numDataPoints
@@ -34,13 +35,15 @@ module mKalmanData
         character ( len = 128 ) :: title
     contains
         private
-        procedure, public :: allocator      =>  allocator_sub
-        procedure, public :: analyze_data   =>  analyze_data_sub
-        procedure, public :: get_data       =>  get_data_sub
+        procedure, public :: allocator       =>  allocator_sub
+        procedure, public :: analyze_data    =>  analyze_data_sub
+        procedure, public :: initialize_data =>  initialize_data_sub
+        procedure, public :: get_data        =>  get_data_sub
     end type KalmanData
 
     private :: allocator_sub
     private :: analyze_data_sub
+    private :: initialize_data_sub
     private :: get_data_sub
     !private :: set_interval_sub
 
@@ -59,16 +62,22 @@ module mKalmanData
 contains
     ! analyze_data_sub
     ! initialize_data_sub
-    ! kalman_filter_sub
-    ! set_interval_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    !     ***********************************************************************
+    !     *                                                                     *
+    !     *      SUBROUTINE analyze_data - FORTRAN IMPLEMENTATION OF THE        *
+    !     *                                RECURSIVE KALMAN FILTER              *
+    !     *                                                                     *
+    !     ***********************************************************************
 
     subroutine analyze_data_sub ( me )
 
         class ( KalmanData ), target :: me
 
             call initialize_data_sub ( me )
+
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
             me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
             me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
@@ -87,11 +96,21 @@ contains
 
             ! create a rank 0 matrix tmat
             me % tmat  ( : , : ) = dot_product ( me % gv_k, me % dv_x ( : ) ) ! UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)  [140]
-            me % pcm_p ( : , : ) = me % pcm_p ( : , : ) - matmul ( me % pcm_p ( : , : ), me % tmat ( : , : ) )  ! PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J)
+            me % pcm_p ( : , : ) = me % pcm_p ( : , : ) - matmul ( me % pcm_p ( : , : ), me % tmat ( : , : ) )  ! PCM_P(I,J) =  PCM_P(I,J) - PCM_P(I,K)*TMAT(K,J) [151]
+
+            ! update the filter vector
+            me % pred_x = dot_product ( me % fv_f, me % dv_x )
+            me % fv_f ( : ) = me % gv_k  ( : ) * ( me % true_x - me % pred_x ) ! [164]
 
     end subroutine analyze_data_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    !     **************************************************************************
+    !     *                                                                        *
+    !     *      SUBROUTINE initialize_data - TO INITIALIZE VARIABLES              *
+    !     *                                                                        *
+    !     **************************************************************************
 
     subroutine initialize_data_sub ( me )
 
@@ -102,47 +121,12 @@ contains
             pcmp_diagonal ( : )  = one  ! [85]
 
             ! rank 1
-            me % fv_f ( : ) = zero  !  [83]
-            me % gv_k ( : ) = zero  !  [84]
+            me % fv_f = zero  !  [83]
+            me % gv_k = zero  !  [84]
 
             ! rank 0
             me % test1 = me % rLengthFilter  !  [87]
 
     end subroutine initialize_data_sub
-
-    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
-
-    subroutine kalman_filter_sub ( me )
-
-        class ( KalmanData ), target :: me
-
-            call set_interval_sub ( me )
-
-    end subroutine kalman_filter_sub
-
-    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
-
-    subroutine set_interval_sub ( me )
-
-        class ( KalmanData ), target :: me
-
-            ! LengthFilter \in [ 5, imp1 ]
-            me % LengthFilter =  min ( me % LengthFilter, imp1 ) ! enforce upper bound
-            me % LengthFilter =  max ( me % LengthFilter, 5 )    ! enforce lower bound
-            me % rLengthFilter = real ( me % LengthFilter, rp )  ! saves on keyboarding
-
-            ! LengthPrediction \in [ 1, imp2 ]
-            me % LengthPrediction =  min ( me % LengthPrediction, imp2 ) ! enforce upper bound
-            me % LengthPrediction =  max ( me % LengthPrediction, 1 )    ! enforce lower bound
-
-            ! TestFactor \in [ 1.01, 10 ** 10 ]
-            me % TestFactor =  min ( me % TestFactor, 10.0_rp ** 10 ) ! enforce upper bound
-            me % TestFactor =  max ( me % TestFactor, 1.01_rp )       ! enforce lower bound
-
-                ! mod_kalman_data.f08:96:54:
-                !              me % TestFactor =  min ( me % TestFactor, 10_rp ** 10 ) ! enforce upper bound
-                ! Error: 'a2' argument of 'min' intrinsic at (1) must be REAL(8)
-
-    end subroutine set_interval_sub
 
 end module mKalmanData

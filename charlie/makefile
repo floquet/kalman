@@ -46,7 +46,7 @@ debug:
 
 clean:
 	rm -rf $(OBJS) $(PROGRAM) $(patsubst %.o,%.mod,$(MOD_OBJS))
-	rm -f *.mod *.smod *.o
+	rm -f *.mod *.smod *.o *.dSYM
 
 .PHONY: debug default clean
 
@@ -65,17 +65,28 @@ mod_kalman_data.o         : mod_command_line.o mod_constants.o mod_io_handles.o 
 mod_set_precision.o       :
 mod_time_stamp.o          :
 
+# dantopa@Muntz-Szasz.local:charlie $ date
+# Sat Feb 11 15:44:44 CST 2017
 
-# rditldmt@ITLDMT-MD-O2034:charlie $ date
-# Fri Jan 27 14:16:28 CST 2017
+# dantopa@Muntz-Szasz.local:charlie $ pwd
+# /Users/dantopa/Documents/GitHub_desktop/kalman/charlie
 
-# rditldmt@ITLDMT-MD-O2034:charlie $ pwd
-# /Users/rditldmt/Documents/GitHub_Desktop/kalman/charlie
-
-# rditldmt@ITLDMT-MD-O2034:charlie $ echo $gflags
+# dantopa@Muntz-Szasz.local:charlie $ echo $gflags
 # -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only
 
-# rditldmt@ITLDMT-MD-O2034:charlie $ make debug
+# dantopa@Muntz-Szasz.local:charlie $ gcc --version
+# gcc (MacPorts gcc7 7-20170205_0) 7.0.1 20170205 (experimental)
+# Copyright (C) 2017 Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.  There is NO
+# warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# dantopa@Muntz-Szasz.local:charlie $ gfortran --version
+# GNU Fortran (MacPorts gcc7 7-20170205_0) 7.0.1 20170205 (experimental)
+# Copyright (C) 2017 Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.  There is NO
+# warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# dantopa@Muntz-Szasz.local:charlie $ make debug
 # PROGRAM  = forsee
 # PRG_OBJ  = forsee.o
 # SRCS     = forsee.f08 mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_set_precision.f08 mod_time_stamp.f08
@@ -83,7 +94,7 @@ mod_time_stamp.o          :
 # MODS     = mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_set_precision.f08 mod_time_stamp.f08
 # MOD_OBJS = mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
 
-# rditldmt@ITLDMT-MD-O2034:charlie $ make
+# dantopa@Muntz-Szasz.local:charlie $ make
 # gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
 # gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_constants.o mod_constants.f08
 # gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_command_line.o mod_command_line.f08
