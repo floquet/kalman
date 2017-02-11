@@ -25,6 +25,8 @@ contains
 
             call open_data_set_sub      ( myIO = myIOHandles )
             call read_file_type_inp_sub ( me, myIO = myIOHandles )
+            call echo_data_sub          ( me, io_write = stdout )
+            call first_and_last_sub     ( me, io_write = stdout )
 
     end subroutine get_data_sub
 
@@ -47,14 +49,14 @@ contains
 
             write ( unit = io_handle, fmt = '( "Reading data for ", g0, "." )' ) trim ( me % title )
 
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % q, me % r
+            read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
+            read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % q, me % r
 
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % LengthFilter, me % LengthPrediction
+            read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
+            read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % LengthFilter, me % LengthPrediction
 
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
-            read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % baseline, me % TestFactor
+            read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
+            read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % baseline, me % TestFactor
 
             ! measure the length of the data, allocate memory, then read the data
             read ( unit = myIO % inp, iostat = io_status, iomsg = io_msg  ) ! skip comment line
@@ -62,7 +64,7 @@ contains
             ! count data points
             me % numDataPoints = -1 ! damn trailing blank line in data file
             count_data_points : do
-                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
+                read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
                 if ( is_iostat_end ( io_status ) ) exit count_data_points
                 me % numDataPoints = me % numDataPoints + 1
             end do count_data_points
@@ -72,15 +74,12 @@ contains
             ! read data points
             rewind ( myIO % inp )
             advance_pointer : do k_numDataPoints = 1, 8
-                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
+                read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg )
             end do advance_pointer
 
             read_data_points : do k_numDataPoints = 1, me % numDataPoints
-                read ( myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
+                read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
             end do read_data_points
-
-            write ( stdout, fmt_generic ) 'data point ( 1 ) = ', me % dv_x ( 1 )
-            write ( stdout, fmt_generic ) 'last data point ( ', me % numDataPoints,' ) = ', me % dv_x ( me % numDataPoints )
 
         return
 

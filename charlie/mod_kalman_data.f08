@@ -39,19 +39,30 @@ module mKalmanData
         procedure, public :: analyze_data    =>  analyze_data_sub
         procedure, public :: initialize_data =>  initialize_data_sub
         procedure, public :: get_data        =>  get_data_sub
+        procedure, public :: set_interval    =>  set_interval_sub
     end type KalmanData
 
     private :: allocator_sub
     private :: analyze_data_sub
     private :: initialize_data_sub
     private :: get_data_sub
-    !private :: set_interval_sub
+    private :: set_interval_sub
 
     interface
 
         module subroutine allocator_sub ( me )
             class ( KalmanData ), target :: me
         end subroutine allocator_sub
+
+        module subroutine echo_data_sub ( me, io_write )
+            class ( KalmanData ), target :: me
+            integer, intent ( in ) :: io_write
+        end subroutine echo_data_sub
+
+        module subroutine first_and_last_sub ( me, io_write )
+            class ( KalmanData ), target :: me
+            integer, intent ( in ) :: io_write
+        end subroutine first_and_last_sub
 
         module subroutine get_data_sub ( me )
             class ( KalmanData ), target :: me
@@ -62,6 +73,7 @@ module mKalmanData
 contains
     ! analyze_data_sub
     ! initialize_data_sub
+    ! set_interval_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
@@ -77,6 +89,7 @@ contains
         class ( KalmanData ), target :: me
 
             call initialize_data_sub ( me )
+            call set_interval_sub    ( me )
 
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
             me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
@@ -128,5 +141,30 @@ contains
             me % test1 = me % rLengthFilter  !  [87]
 
     end subroutine initialize_data_sub
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    subroutine set_interval_sub ( me )
+
+        class ( KalmanData ), target :: me
+
+            ! LengthFilter \in [ 5, imp1 ]
+            me %  LengthFilter =  min ( me % LengthFilter, imp1 ) ! enforce upper bound
+            me %  LengthFilter =  max ( me % LengthFilter, 5 )    ! enforce lower bound
+            me % rLengthFilter = real ( me % LengthFilter, rp )  ! saves on keyboarding
+
+            ! LengthPrediction \in [ 1, imp2 ]
+            me % LengthPrediction =  min ( me % LengthPrediction, imp2 ) ! enforce upper bound
+            me % LengthPrediction =  max ( me % LengthPrediction, 1 )    ! enforce lower bound
+
+            ! TestFactor \in [ 1.01, 10 ** 10 ]
+            me % TestFactor =  min ( me % TestFactor, 10.0_rp ** 10 ) ! enforce upper bound
+            me % TestFactor =  max ( me % TestFactor, 1.01_rp )       ! enforce lower bound
+
+                ! mod_kalman_data.f08:96:54:
+                !              me % TestFactor =  min ( me % TestFactor, 10_rp ** 10 ) ! enforce upper bound
+                ! Error: 'a2' argument of 'min' intrinsic at (1) must be REAL(8)
+
+    end subroutine set_interval_sub
 
 end module mKalmanData
