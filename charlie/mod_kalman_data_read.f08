@@ -23,10 +23,11 @@ contains
         ! local variables
         type ( io_handles ) :: myIOHandles
 
-            call open_data_set_sub      ( myIO = myIOHandles )
+            call open_data_set_sub      (     myIO = myIOHandles )
             call read_file_type_inp_sub ( me, myIO = myIOHandles )
-            call echo_data_sub          ( me, io_write = stdout )
-            call first_and_last_sub     ( me, io_write = stdout )
+
+            if ( echo_print ) call echo_data_sub      ( me, io_write = stdout )
+            if ( echo_print ) call first_and_last_sub ( me, io_write = stdout )
 
     end subroutine get_data_sub
 
@@ -47,7 +48,7 @@ contains
                 stop error_fatal
             end if
 
-            write ( unit = io_handle, fmt = '( "Reading data for ", g0, "." )' ) trim ( me % title )
+            write ( unit = io_handle, fmt = '( "Reading data for ", g0, "." )' ) trim ( me % title ) ! [209]
 
             read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) ! skip comment line
             read ( unit = myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg  ) me % q, me % r

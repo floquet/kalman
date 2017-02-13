@@ -16,6 +16,8 @@ module mKalmanData
     integer        :: io_handle = stdout, record
     integer ( ip ) :: k_numDataPoints
 
+    logical :: echo_print = .true.
+
     ! pointers
     real ( rp ), pointer :: pcmp_flattened ( : ), pcmp_diagonal ( : )
 
@@ -23,11 +25,11 @@ module mKalmanData
         ! rank 2
         real ( rp ), allocatable :: pcm_p ( : , : ), tmat ( : , : )
         ! rank 1
-        real ( rp ), allocatable :: dv_x ( : ), gv_k ( : ), fv_f ( : )
+        real ( rp ), allocatable :: dv_x ( : ), gv_k ( : ), fv_f ( : ), buffer ( : )
         ! rank 0
         real ( rp ) :: q, r, baseline, TestFactor
         real ( rp ) :: t_scalar, test0, test1, rLengthFilter
-        real ( rp ) :: pred_x, true_x
+        real ( rp ) :: pred_x, true_x, error_x
 
         integer        :: LengthFilter, LengthPrediction
         integer ( ip ) :: numDataPoints
@@ -45,6 +47,7 @@ module mKalmanData
     private :: allocator_sub
     private :: analyze_data_sub
     private :: initialize_data_sub
+    private :: kalman_sub
     private :: get_data_sub
     private :: set_interval_sub
 
@@ -77,6 +80,20 @@ contains
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
+    subroutine analyze_data_sub ( me )
+
+        class ( KalmanData ), target :: me
+
+            call set_interval_sub    ( me )
+            call initialize_data_sub ( me )
+            call kalman_sub          ( me )
+                             ! call output_sub ( me, std_out, myIO )
+            if ( echo_print ) call output_sub ( me, std_out, myIO )
+
+    end subroutine analyze_data_sub
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
     !     ***********************************************************************
     !     *                                                                     *
     !     *      SUBROUTINE analyze_data - FORTRAN IMPLEMENTATION OF THE        *
@@ -84,12 +101,9 @@ contains
     !     *                                                                     *
     !     ***********************************************************************
 
-    subroutine analyze_data_sub ( me )
+    subroutine kalman_sub ( me )
 
         class ( KalmanData ), target :: me
-
-            call initialize_data_sub ( me )
-            call set_interval_sub    ( me )
 
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
             me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
@@ -115,7 +129,7 @@ contains
             me % pred_x = dot_product ( me % fv_f, me % dv_x )
             me % fv_f ( : ) = me % gv_k  ( : ) * ( me % true_x - me % pred_x ) ! [164]
 
-    end subroutine analyze_data_sub
+    end subroutine kalman_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
@@ -136,9 +150,12 @@ contains
             ! rank 1
             me % fv_f = zero  !  [83]
             me % gv_k = zero  !  [84]
+            me % dv_x = baseline ! [236]
+            if ( me % LengthPrediction > 1 ) me % buffer ( : ) = me % baseline  ! [241]
 
             ! rank 0
-            me % test1 = me % rLengthFilter  !  [87]
+            me % test1  = me % rLengthFilter  !  [87]
+            me % true_x = me % baseline  ! [245]
 
     end subroutine initialize_data_sub
 

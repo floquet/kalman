@@ -46,9 +46,39 @@ contains
 
             write ( unit = io_write, fmt = fmt_generic ) ''
             write ( unit = io_write, fmt = fmt_generic ) 'Peek at data stream: '
-            write ( stdout, fmt_generic ) 'data point ( 1 ) = ', me % dv_x ( 1 )
-            write ( stdout, fmt_generic ) 'last data point ( ', me % numDataPoints,' ) = ', me % dv_x ( me % numDataPoints )
+            write ( unit = stdout,   fmt = fmt_generic ) 'data point ( 1 ) = ', me % dv_x ( 1 )
+            write ( unit = stdout,   fmt = fmt_generic ) 'last data point ( ', me % numDataPoints,' ) = ', &
+                                                          me % dv_x ( me % numDataPoints )
 
     end subroutine first_and_last_sub
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+!     *****************************************************************
+!     *                                                               *
+!     *      SUBROUTINE OUTPUT - TO PRINT RESULTS TO THE OUTPUT FILE  *
+!     *                                                               *
+!     *****************************************************************
+
+    subroutine output_sub ( me, io_write, myIO ) ! [175]
+
+        class ( KalmanData ), target :: me
+
+        ! local variables
+        integer,            intent ( in ) :: io_write
+        type (io_handles ), intent ( in ) :: myIO
+
+            me % error_x = me % true_x - me % pred_x
+
+            write ( unit = stdout,   fmt = 100 ) me % q, me % q, me % LengthFilter, me % baseline, me % TestFactor
+            write ( unit = io_write, fmt = 100 ) me % q, me % q, me % LengthFilter, me % baseline, me % TestFactor
+
+            write ( unit = myIO % t ) me % true_x
+            write ( unit = myIO % p ) me % pred_x
+            write ( unit = myIO % e ) me % error_x
+
+        100 format ( 2X, I5, 2X, E12.5, 2X, E12.5, 2X, E12.5, 2X, E12.5, 2X, E12.5 )
+
+    end subroutine output_sub
 
 end submodule smKalmanDataWrite

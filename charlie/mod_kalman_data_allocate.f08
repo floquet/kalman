@@ -36,9 +36,10 @@ submodule ( mKalmanData ) smKalmanDataAllocate
 
             call allocate_rank_2_rp_sub ( me % tmat,  me % numDataPoints, me % numDataPoints )
             ! rank 1
-            call allocate_rank_1_rp_sub ( me % dv_x, me % numDataPoints )
-            call allocate_rank_1_rp_sub ( me % gv_k, me % numDataPoints )
-            call allocate_rank_1_rp_sub ( me % fv_f, me % numDataPoints )
+            call allocate_rank_1_rp_sub ( me % dv_x,   me % numDataPoints )
+            call allocate_rank_1_rp_sub ( me % gv_k,   me % numDataPoints )
+            call allocate_rank_1_rp_sub ( me % fv_f,   me % numDataPoints )
+            call allocate_rank_1_rp_sub ( me % buffer, me % baseline - 1 )
 
     end subroutine allocator_sub
 
