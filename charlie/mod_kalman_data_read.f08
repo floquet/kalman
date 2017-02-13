@@ -23,9 +23,6 @@ contains
             call open_data_set_sub      ( me )
             call read_file_type_inp_sub ( me )
 
-            if ( echo_print ) call echo_data_sub      ( me, io_write = stdout )
-            if ( echo_print ) call first_and_last_sub ( me, io_write = stdout )
-
     end subroutine get_all_data_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
@@ -74,6 +71,7 @@ contains
 
             read_data_points : do k_numDataPoints = 1, me % numDataPoints
                 read ( unit = me % myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
+                write ( stdout, fmt_generic ) 'k_numDataPoints = ', k_numDataPoints, '; data = ', me % dv_x ( k_numDataPoints )
             end do read_data_points
 
         return

@@ -15,8 +15,8 @@ contains
 
         class ( KalmanData ), target :: me
 
-        character ( len = * ), parameter :: head = '     I      TRUE_X        PRED_X        ERROR', &
-                                            tail = '            Q             R'
+        character ( len = * ), parameter :: head = '      I      TRUE_X        PRED_X        ERROR', &
+                                            tail = '             Q             R'
 
             write ( unit = me % myIO % out, fmt = fmt_generic ) me % title
             write ( unit = me % myIO % out, fmt = fmt_generic ) ''
@@ -85,9 +85,9 @@ contains
 
             me % error_x = me % true_x - me % pred_x  ! [181]
 
-            if ( echo_print ) then
-                write ( unit = stdout,      fmt = 100 ) me % index, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [184]
-            end if
+            ! if ( echo_print ) then
+            !     write ( unit = stdout,      fmt = 100 ) me % index, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [184]
+            ! end if
             write ( unit = me % myIO % out, fmt = 100 ) me % index, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [183]
             write ( unit = me % myIO % t,   fmt = 100 ) me % index, me % true_x  ! [185]
             write ( unit = me % myIO % p,   fmt = 100 ) me % index, me % pred_x  ! [186]
