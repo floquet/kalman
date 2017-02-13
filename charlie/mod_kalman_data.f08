@@ -9,12 +9,13 @@ module mKalmanData
     implicit none
 
     ! parameters
-    integer, parameter :: imp1 = 50, imp2 = 50
+    integer ( ip ), parameter :: imp1 = 50, imp2 = 50
     character ( len = * ), parameter :: error_fatal = 'Fatal error in module "mKalmanData"...'
 
     ! variables
-    integer        :: io_handle = stdout, record
-    integer ( ip ) :: k_numDataPoints
+    integer                 :: io_handle = stdout, record
+    integer ( ip ), private :: j, k ! iterators
+    integer ( ip )          :: k_numDataPoints
 
     logical :: echo_print = .true.
 
@@ -31,8 +32,9 @@ module mKalmanData
         real ( rp ) :: t_scalar, test0, test1, rLengthFilter
         real ( rp ) :: pred_x, true_x, error_x
 
-        integer        :: LengthFilter, LengthPrediction
+        integer ( ip ) :: LengthFilter, LengthPrediction
         integer ( ip ) :: numDataPoints
+        integer ( ip ) :: index
 
         character ( len = 128 ) :: title
 
@@ -74,9 +76,8 @@ module mKalmanData
             class ( KalmanData ), target :: me
         end subroutine get_all_data_sub
 
-        module subroutine output_sub ( me, io_write ) ! [175]
+        module subroutine output_sub ( me ) ! [175]
             class ( KalmanData ), target :: me
-            integer, intent ( in ) :: io_write
         end subroutine output_sub
 
         module subroutine write_header_sub ( me )
@@ -98,12 +99,32 @@ contains
         class ( KalmanData ), target :: me
 
             call get_all_data_sub    ( me )  ! [25]
+            me % dv_x ( : ) = me % baseline  ! [236]
+            if ( me % LengthPrediction > 1 ) then  ! [239]
+                do k = 1, me % LengthPrediction - 1
+                    me % buffer ( k ) = me % baseline
+                end do
+            endif
+            me % true_x = me % baseline  ! [245]
             call write_header_sub    ( me )
-            call initialize_data_sub ( me )
-            call set_interval_sub    ( me )
-            call kalman_sub          ( me )
-                             ! call output_sub ( me, std_out, myIO )
-            if ( echo_print ) call output_sub ( me, stdout )
+            call set_interval_sub    ( me )  ! [212]
+            call initialize_data_sub ( me )  ! [29]
+
+            do k = 1, me % numDataPoints  ! [260]
+                me % index = me % index + 1
+                me % dv_x ( me % LengthFilter ) = me % true_x  ! [261]
+
+                if ( me % LengthPrediction > 1 ) then
+                    me % dv_x ( me % LengthFilter ) = me % buffer ( 1 )
+                    do j = 1, me % LengthPrediction - 2
+                        me % buffer ( j ) = me % buffer ( j + 1 )  ! [265]
+                    end do
+                    me % buffer ( me % LengthPrediction - 1 ) = me % true_x  ! [267]
+                end if
+
+                call kalman_sub ( me )
+                call output_sub ( me )
+            end do
 
     end subroutine analyze_data_sub
 
@@ -172,22 +193,24 @@ contains
             me % test1  = me % rLengthFilter  !  [87]
             !me % true_x = me % baseline  ! [245]
 
+            me % index = 1_ip
+
     end subroutine initialize_data_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
-    subroutine set_interval_sub ( me )
+    subroutine set_interval_sub ( me )  ! [212]
 
         class ( KalmanData ), target :: me
 
             ! LengthFilter \in [ 5, imp1 ]
             me %  LengthFilter =  min ( me % LengthFilter, imp1 ) ! enforce upper bound
-            me %  LengthFilter =  max ( me % LengthFilter, 5 )    ! enforce lower bound
-            me % rLengthFilter = real ( me % LengthFilter, rp )  ! saves on keyboarding
+            me %  LengthFilter =  max ( me % LengthFilter, 5_ip ) ! enforce lower bound
+            me % rLengthFilter = real ( me % LengthFilter, rp )   ! saves on keyboarding
 
             ! LengthPrediction \in [ 1, imp2 ]
             me % LengthPrediction =  min ( me % LengthPrediction, imp2 ) ! enforce upper bound
-            me % LengthPrediction =  max ( me % LengthPrediction, 1 )    ! enforce lower bound
+            me % LengthPrediction =  max ( me % LengthPrediction, 1_ip )  ! enforce lower bound
 
             ! TestFactor \in [ 1.01, 10 ** 10 ]
             me % TestFactor =  min ( me % TestFactor, 10.0_rp ** 10 ) ! enforce upper bound

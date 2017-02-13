@@ -22,7 +22,7 @@ contains
             write ( unit = me % myIO % out, fmt = fmt_generic ) ''
             call echo_data_sub ( me, me % myIO % out )
             write ( unit = me % myIO % out, fmt = fmt_generic ) ''
-            write ( unit = me % myIO % out, fmt = fmt_generic ) head, tail
+            write ( unit = me % myIO % out, fmt = fmt_generic ) head, tail  ! [247]
 
 
     end subroutine write_header_sub
@@ -67,6 +67,7 @@ contains
             write ( unit = stdout,   fmt = fmt_generic ) 'data point ( 1 ) = ', me % dv_x ( 1 )
             write ( unit = stdout,   fmt = fmt_generic ) 'last data point ( ', me % numDataPoints,' ) = ', &
                                                           me % dv_x ( me % numDataPoints )
+            write ( unit = io_write, fmt = fmt_generic ) ''
 
     end subroutine first_and_last_sub
 
@@ -78,20 +79,19 @@ contains
 !     *                                                               *
 !     *****************************************************************
 
-    subroutine output_sub ( me, io_write ) ! [175]
+    subroutine output_sub ( me ) ! [175]
 
         class ( KalmanData ), target :: me
 
-        integer, intent ( in ) :: io_write
-
             me % error_x = me % true_x - me % pred_x  ! [181]
 
-            write ( unit = io_write,        fmt = 100 ) k, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [184]
-            write ( unit = me % myIO % out, fmt = 100 ) k, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [183]
-
-            write ( unit = me % myIO % t,   fmt = 100 ) k, me % true_x  ! [185]
-            write ( unit = me % myIO % p,   fmt = 100 ) k, me % pred_x  ! [186]
-            write ( unit = me % myIO % e,   fmt = 100 ) k, me % error_x ! [186]
+            if ( echo_print ) then
+                write ( unit = stdout,      fmt = 100 ) me % index, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [184]
+            end if
+            write ( unit = me % myIO % out, fmt = 100 ) me % index, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [183]
+            write ( unit = me % myIO % t,   fmt = 100 ) me % index, me % true_x  ! [185]
+            write ( unit = me % myIO % p,   fmt = 100 ) me % index, me % pred_x  ! [186]
+            write ( unit = me % myIO % e,   fmt = 100 ) me % index, me % error_x ! [186]
 
         100 format ( 2X, I5, 2X, E12.5, 2X, E12.5, 2X, E12.5, 2X, E12.5, 2X, E12.5 )
 
