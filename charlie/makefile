@@ -66,54 +66,57 @@ mod_kalman_write.o        : mod_constants.o
 mod_set_precision.o       :
 mod_time_stamp.o          :
 
-# dantopa@Muntz-Szasz.local:charlie $ date
-# Sat Feb 11 15:44:44 CST 2017
+# dantopa@Riesz-Fischer:charlie $ date
+# Sun Feb 12 22:46:00 CST 2017
 
-# dantopa@Muntz-Szasz.local:charlie $ pwd
+# dantopa@Riesz-Fischer:charlie $ pwd
 # /Users/dantopa/Documents/GitHub_desktop/kalman/charlie
 
-# dantopa@Muntz-Szasz.local:charlie $ echo $gflags
-# -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only
+# dantopa@Riesz-Fischer:charlie $ echo $gflags
+# -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5
 
-# dantopa@Muntz-Szasz.local:charlie $ gcc --version
-# gcc (MacPorts gcc7 7-20170205_0) 7.0.1 20170205 (experimental)
-# Copyright (C) 2017 Free Software Foundation, Inc.
-# This is free software; see the source for copying conditions.  There is NO
-# warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-#
-# dantopa@Muntz-Szasz.local:charlie $ gfortran --version
-# GNU Fortran (MacPorts gcc7 7-20170205_0) 7.0.1 20170205 (experimental)
-# Copyright (C) 2017 Free Software Foundation, Inc.
-# This is free software; see the source for copying conditions.  There is NO
-# warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-#
-# dantopa@Muntz-Szasz.local:charlie $ make debug
+# dantopa@Riesz-Fischer:charlie $ make debug
 # PROGRAM  = forsee
 # PRG_OBJ  = forsee.o
-# SRCS     = forsee.f08 mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_set_precision.f08 mod_time_stamp.f08
-# OBJS     = forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
-# MODS     = mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_set_precision.f08 mod_time_stamp.f08
-# MOD_OBJS = mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
+# SRCS     = forsee.f08 mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_kalman_data_write.f08 mod_set_precision.f08 mod_time_stamp.f08
+# OBJS     = forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_kalman_data_write.o mod_set_precision.o mod_time_stamp.o
+# MODS     = mod_command_line.f08 mod_constants.f08 mod_file_handling.f08 mod_io_handles.f08 mod_kalman_data.f08 mod_kalman_data_allocate.f08 mod_kalman_data_read.f08 mod_kalman_data_write.f08 mod_set_precision.f08 mod_time_stamp.f08
+# MOD_OBJS = mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_kalman_data_write.o mod_set_precision.o mod_time_stamp.o
 
-# dantopa@Muntz-Szasz.local:charlie $ make
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_set_precision.o mod_set_precision.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_constants.o mod_constants.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_command_line.o mod_command_line.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_file_handling.o mod_file_handling.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_io_handles.o mod_io_handles.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data.o mod_kalman_data.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data_allocate.o mod_kalman_data_allocate.f08
-# mod_kalman_data_allocate.f08:2:23:
+# dantopa@Riesz-Fischer:charlie $ gcc --version
+# Configured with: --prefix=/Applications/Xcode.app/Contents/Developer/usr --with-gxx-include-dir=/usr/include/c++/4.2.1
+# Apple LLVM version 8.0.0 (clang-800.0.42.1)
+# Target: x86_64-apple-darwin15.6.0
+# Thread model: posix
+# InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+# dantopa@Riesz-Fischer:charlie $ gfortran --version
+# GNU Fortran (GCC) 6.1.0
+# Copyright (C) 2016 Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.  There is NO
+# warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
-#  submodule ( mKalmanData ) smKalmanDataAllocate
-#                        1
-# Warning: USE statement at (1) has no ONLY qualifier [-Wuse-without-only]
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_kalman_data_read.o mod_kalman_data_read.f08
-# mod_kalman_data_read.f08:2:23:
+
+# dantopa@Riesz-Fischer:charlie $ make
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_set_precision.o mod_set_precision.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_constants.o mod_constants.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_command_line.o mod_command_line.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_file_handling.o mod_file_handling.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_io_handles.o mod_io_handles.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_kalman_data.o mod_kalman_data.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_kalman_data_allocate.o mod_kalman_data_allocate.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_kalman_data_read.o mod_kalman_data_read.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_kalman_data_write.o mod_kalman_data_write.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o mod_time_stamp.o mod_time_stamp.f08
+# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -o forsee.o forsee.f08
+# gfortran -g -o forsee forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_kalman_data_write.o mod_set_precision.o mod_time_stamp.o
+
+# dantopa@Riesz-Fischer:charlie $ ./forsee haa
 #
-#  submodule ( mKalmanData ) smKalmanDataRead
-#                        1
-# Warning: USE statement at (1) has no ONLY qualifier [-Wuse-without-only]
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o mod_time_stamp.o mod_time_stamp.f08
-# gfortran -c -g -ffpe-trap=denormal,invalid,zero -fbacktrace -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Og -pedantic -fcheck=bounds -fmax-errors=5 -Wuse-without-only -o forsee.o forsee.f08
-# gfortran -g -o forsee forsee.o mod_command_line.o mod_constants.o mod_file_handling.o mod_io_handles.o mod_kalman_data.o mod_kalman_data_allocate.o mod_kalman_data_read.o mod_set_precision.o mod_time_stamp.o
+# timestamp: 2017-02-12  22:46:46  UCT-0600
+#
+# Fortran compiler version: GCC version 6.1.0
+#
+# Fortran compilation options: -fPIC -feliminate-unused-debug-symbols -mmacosx-version-min=10.11.6 -mtune=core2 -auxbase-strip forsee.o -g -Og -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Wpedantic -ffpe-trap=denormal,invalid,zero -fbacktrace -fcheck=bounds -fmax-errors=5
+#
+# STOP #  #  # successful completion for program foresee . . .

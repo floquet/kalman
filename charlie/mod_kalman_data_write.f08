@@ -4,9 +4,28 @@ submodule ( mKalmanData ) smKalmanDataWrite
     use mConstants,                     only : fmt_generic
 
 contains
-    ! get_data_sub
-    ! read_file_type_inp_sub
-    ! open_data_set_sub
+    ! echo_data_sub
+    ! first_and_last_sub
+    ! output_sub
+    ! write_header_sub
+
+    !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
+
+    subroutine write_header_sub ( me )
+
+        class ( KalmanData ), target :: me
+
+        character ( len = * ), parameter :: head = '     I      TRUE_X        PRED_X        ERROR', &
+                                            tail = '            Q             R'
+
+            write ( unit = me % myIO % out, fmt = fmt_generic ) me % title
+            write ( unit = me % myIO % out, fmt = fmt_generic ) ''
+            call echo_data_sub ( me, me % myIO % out )
+            write ( unit = me % myIO % out, fmt = fmt_generic ) ''
+            write ( unit = me % myIO % out, fmt = fmt_generic ) head, tail
+
+
+    end subroutine write_header_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
@@ -23,15 +42,14 @@ contains
 
         ! local variables
         integer, intent ( in ) :: io_write
+        character ( len = * ), parameter :: tab = '    '
 
-            write ( unit = io_write, fmt = fmt_generic ) ''
-            write ( unit = io_write, fmt = fmt_generic ) 'Echo print: '
-            write ( unit = io_write, fmt = fmt_generic ) 'THE VALUE OF Q IS:        ', me % q
-            write ( unit = io_write, fmt = fmt_generic ) 'THE VALUE OF R IS:        ', me % r
-            write ( unit = io_write, fmt = fmt_generic ) 'THE FILTER LENGTH IS:     ', me % LengthFilter
-            write ( unit = io_write, fmt = fmt_generic ) 'THE PREDICTION LENGTH IS: ', me % LengthPrediction
-            write ( unit = io_write, fmt = fmt_generic ) 'THE BASELINE VALUE IS:    ', me % baseline
-            write ( unit = io_write, fmt = fmt_generic ) 'THE TEST FACTOR VALUE IS: ', me % TestFactor
+            write ( unit = io_write, fmt = fmt_generic ) tab, 'THE VALUE OF Q IS:        ', me % q  ! [218]
+            write ( unit = io_write, fmt = fmt_generic ) tab, 'THE VALUE OF R IS:        ', me % r
+            write ( unit = io_write, fmt = fmt_generic ) tab, 'THE FILTER LENGTH IS:     ', me % LengthFilter
+            write ( unit = io_write, fmt = fmt_generic ) tab, 'THE PREDICTION LENGTH IS: ', me % LengthPrediction
+            write ( unit = io_write, fmt = fmt_generic ) tab, 'THE BASELINE VALUE IS:    ', me % baseline
+            write ( unit = io_write, fmt = fmt_generic ) tab, 'THE TEST FACTOR VALUE IS: ', me % TestFactor
 
     end subroutine echo_data_sub
 
@@ -60,22 +78,20 @@ contains
 !     *                                                               *
 !     *****************************************************************
 
-    subroutine output_sub ( me, io_write, myIO ) ! [175]
+    subroutine output_sub ( me, io_write ) ! [175]
 
         class ( KalmanData ), target :: me
 
-        ! local variables
-        integer,            intent ( in ) :: io_write
-        type (io_handles ), intent ( in ) :: myIO
+        integer, intent ( in ) :: io_write
 
-            me % error_x = me % true_x - me % pred_x
+            me % error_x = me % true_x - me % pred_x  ! [181]
 
-            write ( unit = stdout,   fmt = 100 ) me % q, me % q, me % LengthFilter, me % baseline, me % TestFactor
-            write ( unit = io_write, fmt = 100 ) me % q, me % q, me % LengthFilter, me % baseline, me % TestFactor
+            write ( unit = io_write,        fmt = 100 ) k, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [184]
+            write ( unit = me % myIO % out, fmt = 100 ) k, me % true_x, me % pred_x, me % error_x, me % q, me % r  ! [183]
 
-            write ( unit = myIO % t ) me % true_x
-            write ( unit = myIO % p ) me % pred_x
-            write ( unit = myIO % e ) me % error_x
+            write ( unit = me % myIO % t,   fmt = 100 ) k, me % true_x  ! [185]
+            write ( unit = me % myIO % p,   fmt = 100 ) k, me % pred_x  ! [186]
+            write ( unit = me % myIO % e,   fmt = 100 ) k, me % error_x ! [186]
 
         100 format ( 2X, I5, 2X, E12.5, 2X, E12.5, 2X, E12.5, 2X, E12.5, 2X, E12.5 )
 

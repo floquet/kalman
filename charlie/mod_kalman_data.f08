@@ -35,20 +35,23 @@ module mKalmanData
         integer ( ip ) :: numDataPoints
 
         character ( len = 128 ) :: title
+
+        type ( io_handles ) :: myIO
+
     contains
         private
-        procedure, public :: allocator       =>  allocator_sub
+        !procedure, public :: allocator       =>  allocator_sub
         procedure, public :: analyze_data    =>  analyze_data_sub
-        procedure, public :: initialize_data =>  initialize_data_sub
-        procedure, public :: get_data        =>  get_data_sub
-        procedure, public :: set_interval    =>  set_interval_sub
+        !procedure, public :: initialize_data =>  initialize_data_sub
+        !procedure, public :: get_all_data    =>  get_all_data_sub
+        !procedure, public :: set_interval    =>  set_interval_sub
     end type KalmanData
 
     private :: allocator_sub
     private :: analyze_data_sub
     private :: initialize_data_sub
     private :: kalman_sub
-    private :: get_data_sub
+    private :: get_all_data_sub
     private :: set_interval_sub
 
     interface
@@ -67,9 +70,18 @@ module mKalmanData
             integer, intent ( in ) :: io_write
         end subroutine first_and_last_sub
 
-        module subroutine get_data_sub ( me )
+        module subroutine get_all_data_sub ( me )
             class ( KalmanData ), target :: me
-        end subroutine get_data_sub
+        end subroutine get_all_data_sub
+
+        module subroutine output_sub ( me, io_write ) ! [175]
+            class ( KalmanData ), target :: me
+            integer, intent ( in ) :: io_write
+        end subroutine output_sub
+
+        module subroutine write_header_sub ( me )
+            class ( KalmanData ), target :: me
+        end subroutine write_header_sub
 
     end interface
 
@@ -77,6 +89,7 @@ contains
     ! analyze_data_sub
     ! initialize_data_sub
     ! set_interval_sub
+    ! kalman_sub
 
     !   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @   @
 
@@ -84,11 +97,13 @@ contains
 
         class ( KalmanData ), target :: me
 
-            call set_interval_sub    ( me )
+            call get_all_data_sub    ( me )  ! [25]
+            call write_header_sub    ( me )
             call initialize_data_sub ( me )
+            call set_interval_sub    ( me )
             call kalman_sub          ( me )
                              ! call output_sub ( me, std_out, myIO )
-            if ( echo_print ) call output_sub ( me, std_out, myIO )
+            if ( echo_print ) call output_sub ( me, stdout )
 
     end subroutine analyze_data_sub
 
@@ -150,12 +165,12 @@ contains
             ! rank 1
             me % fv_f = zero  !  [83]
             me % gv_k = zero  !  [84]
-            me % dv_x = baseline ! [236]
-            if ( me % LengthPrediction > 1 ) me % buffer ( : ) = me % baseline  ! [241]
+            !me % dv_x = me % baseline ! [236]
+            !if ( me % LengthPrediction > 1 ) me % buffer ( : ) = me % baseline  ! [241]
 
             ! rank 0
             me % test1  = me % rLengthFilter  !  [87]
-            me % true_x = me % baseline  ! [245]
+            !me % true_x = me % baseline  ! [245]
 
     end subroutine initialize_data_sub
 
