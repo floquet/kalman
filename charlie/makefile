@@ -120,3 +120,13 @@ mod_time_stamp.o          :
 # Fortran compilation options: -fPIC -feliminate-unused-debug-symbols -mmacosx-version-min=10.11.6 -mtune=core2 -auxbase-strip forsee.o -g -Og -Wall -Waliasing -Wconversion-extra -Wextra -Wsurprising -Wimplicit-procedure -Wintrinsics-std -Wpedantic -ffpe-trap=denormal,invalid,zero -fbacktrace -fcheck=bounds -fmax-errors=5
 #
 # STOP #  #  # successful completion for program foresee . . .
+
+# dantopa@Riesz-Fischer:kalman $ port select --list gcc
+# Available versions for gcc:
+# 	mp-gcc6
+# 	mp-gcc7
+# 	none (active)
+
+# dantopa@Riesz-Fischer:kalman $ sudo port select --set gcc mp-gcc7
+# Password:
+# Selecting 'mp-gcc7' for 'gcc' succeeded. 'mp-gcc7' is now active.
