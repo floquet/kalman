@@ -1,4 +1,4 @@
-module mDeplete
+module mKalman
 
 contains
 
@@ -16,14 +16,14 @@ contains
 
       DO I=1,IFILEN,1
         DO J=1,IFILEN,1
-          PCM_P(I,J) = 0.0
+          PCM_P(I,J) = 0.0D0
         ENDDO
       ENDDO
 
       DO I=1,IFILEN,1
-        FV_F(I)=0.0
-        GV_K(I)=0.0
-        PCM_P(I,I)=1.0
+        FV_F(I)=0.0D0
+        GV_K(I)=0.D0
+        PCM_P(I,I)=1.0D0
       ENDDO
       TEST1=IFILEN
 
@@ -40,10 +40,9 @@ contains
       SUBROUTINE KALMAN(TEST1)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       PARAMETER (IMP1=50)
-      COMMON/FILTER/PCM_P(IMP1,IMP1),GV_K(IMP1),FV_F(IMP1),DV_X(IMP1), &
-        QCOEFF,RCOEFF,PRED_X,TRUE_X,IFILEN,BASEL,QA,QB,QC,RA,RB,RC, &
-        ICOUNT,TFACTR
-      REAL TSCALR,TVECT(IMP1),TMAT(IMP1,IMP1)
+    COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), &
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR
+      REAL TSCALR, TMAT(IMP1,IMP1)
 
 !     UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE)
 
@@ -54,7 +53,7 @@ contains
 !     UPDATE THE GAIN VECTOR
 
       TSCALR = 0.0
-      TEST0 = 0.0
+      TEST0 = 0.0D0
       DO I=1,IFILEN,1
         DO J=1,IFILEN,1
           TSCALR = TSCALR + DV_X(I)*PCM_P(I,J)*DV_X(J)
@@ -72,7 +71,7 @@ contains
 
       TSCALR = TSCALR + RCOEFF
       DO I=1,IFILEN,1
-        GV_K(I) = 0.0
+        GV_K(I) = 0.0D0
         DO J=1,IFILEN,1
           GV_K(I) =  GV_K(I) + PCM_P(I,J)*DV_X(J)/TSCALR
         ENDDO
@@ -96,7 +95,7 @@ contains
 
 !     UPDATE THE FILTER VECTOR
 
-      PRED_X = 0.0
+      PRED_X = 0.0D0
       DO I=1,IFILEN,1
         PRED_X = PRED_X + FV_F(I)*DV_X(I)
       ENDDO
@@ -108,4 +107,4 @@ contains
       RETURN
       END SUBROUTINE KALMAN
 
-end module mDeplete
+end module mKalman

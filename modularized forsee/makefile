@@ -57,5 +57,5 @@ $(PRG_OBJ) : $(MOD_OBJS)
 
 # module interdependencies
 mod_character_positions.o :
-mod_deplete.o             :
 mod_io.o                  :
+mod_kalman.o              :
