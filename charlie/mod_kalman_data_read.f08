@@ -70,8 +70,8 @@ contains
             end do advance_pointer
 
             read_data_points : do k_numDataPoints = 1, me % numDataPoints
-                read ( unit = me % myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
-                !write ( stdout, fmt_generic ) 'k_numDataPoints = ', k_numDataPoints, '; data = ', me % dv_x ( k_numDataPoints )
+                read ( unit = me % myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % data_set ( k_numDataPoints )
+                !write ( stdout, fmt_generic ) 'k_numDataPoints = ', k_numDataPoints, '; data = ', me % data_set ( k_numDataPoints )
             end do read_data_points
 
         return

@@ -15,7 +15,7 @@ MOD_OBJS=$(patsubst %.$(EXT),%.o,$(MODS))
 # mpif90 - gnu, MPI Mac Desktop (execution: mpirun -np 4 ./a.out)
 # FC = mpifort
 FC = gfortran
-FLFLAGS = -g
+FLFLAGS = -g -v
 FCFLAGS = -c ${gflags}
 PRG_OBJ = $(PROGRAM).o
 

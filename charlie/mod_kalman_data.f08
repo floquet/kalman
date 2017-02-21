@@ -26,7 +26,7 @@ module mKalmanData
         ! rank 2
         real ( rp ), allocatable :: pcm_p ( : , : ), tmat ( : , : )
         ! rank 1
-        real ( rp ), allocatable :: dv_x ( : ), gv_k ( : ), fv_f ( : ), buffer ( : )
+        real ( rp ), allocatable :: dv_x ( : ), gv_k ( : ), fv_f ( : ), buffer ( : ), data_set ( : )
         ! rank 0
         real ( rp ) :: q, r, baseline, TestFactor
         real ( rp ) :: t_scalar, test0, test1, rLengthFilter
@@ -99,6 +99,8 @@ contains
         class ( KalmanData ), target :: me
 
             call get_all_data_sub    ( me )  ! [25]
+            call set_interval_sub    ( me )  ! [212]
+
             me % dv_x ( 1 : me % LengthFilter ) = me % baseline  ! [236]
             if ( me % LengthPrediction > 1 ) then  ! [239]
                 do k = 1, me % LengthPrediction - 1
@@ -106,7 +108,6 @@ contains
                 end do
             endif
             me % true_x = me % baseline  ! [245]
-            call set_interval_sub    ( me )  ! [212]
 
             if ( echo_print ) call echo_data_sub      ( me, io_write = stdout )
             if ( echo_print ) call first_and_last_sub ( me, io_write = stdout )
@@ -150,7 +151,7 @@ contains
 
 
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
-            write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % rLengthFilter,' ) = ', pcmp_diagonal( me % rLengthFilter )
+            write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % LengthFilter,' ) = ', pcmp_diagonal( me % LengthFilter )
             me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
             me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
             me % test1 = me % test1 + me % q * me % rLengthFilter  !  [123]
@@ -219,7 +220,7 @@ contains
 
             ! LengthPrediction \in [ 1, imp2 ]
             me % LengthPrediction =  min ( me % LengthPrediction, imp2 + 1_ip ) ! enforce upper bound
-            me % LengthPrediction =  max ( me % LengthPrediction, 1_ip )  ! enforce lower bound
+            me % LengthPrediction =  max ( me % LengthPrediction,        1_ip ) ! enforce lower bound
 
             ! TestFactor \in [ 1.01, 10 ** 10 ]
             me % TestFactor =  min ( me % TestFactor, 10.0_rp ** 10 ) ! enforce upper bound

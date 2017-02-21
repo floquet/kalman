@@ -51,6 +51,8 @@ end program foresee
     ! barrier munitions, designing digital filters to support protective structures research, and reorganizing the topographic
     ! battalions of the U. S. Army, Europe. He is retired in the grade of Colonel, A.U.S.
 
+    ! Coding by Truman Bogdan
+
 
 ! dantopa@Riesz-Fischer:charlie $ date
 ! Sun Feb 12 22:46:00 CST 2017
