@@ -71,7 +71,7 @@ contains
 
             read_data_points : do k_numDataPoints = 1, me % numDataPoints
                 read ( unit = me % myIO % inp, fmt = *, iostat = io_status, iomsg = io_msg ) me % dv_x ( k_numDataPoints )
-                write ( stdout, fmt_generic ) 'k_numDataPoints = ', k_numDataPoints, '; data = ', me % dv_x ( k_numDataPoints )
+                !write ( stdout, fmt_generic ) 'k_numDataPoints = ', k_numDataPoints, '; data = ', me % dv_x ( k_numDataPoints )
             end do read_data_points
 
         return

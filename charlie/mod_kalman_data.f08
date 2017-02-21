@@ -148,7 +148,9 @@ contains
             write ( stdout, fmt_generic ) 'index  = ', me % index
             write ( stdout, fmt_generic ) 'true_x = ', me % true_x
 
+
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
+            write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % rLengthFilter,' ) = ', pcmp_diagonal( me % rLengthFilter )
             me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
             me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
             me % test1 = me % test1 + me % q * me % rLengthFilter  !  [123]

@@ -65,6 +65,7 @@ contains
             write ( unit = io_write, fmt = fmt_generic ) ''
             write ( unit = io_write, fmt = fmt_generic ) 'Peek at data stream: '
             write ( unit = stdout,   fmt = fmt_generic ) 'data point ( 1 ) = ', me % dv_x ( 1 )
+            write ( unit = stdout,   fmt = fmt_generic ) 'data point ( 2 ) = ', me % dv_x ( 2 )
             write ( unit = stdout,   fmt = fmt_generic ) 'last data point ( ', me % numDataPoints,' ) = ', &
                                                           me % dv_x ( me % numDataPoints )
             write ( unit = io_write, fmt = fmt_generic ) ''
