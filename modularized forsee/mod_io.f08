@@ -12,7 +12,7 @@ contains
       PARAMETER (IMP1=50)
     COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
                    GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
-                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR ! rank 0
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, IPREDP, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT, TFACTR ! rank 0
       ERROR = TRUE_X-PRED_X
 
       WRITE(IOUT,10) ICOUNT, TRUE_X, PRED_X, ERROR, QCOEFF, RCOEFF
@@ -22,7 +22,7 @@ contains
       WRITE(IPLT3,10)ICOUNT, ERROR
  10   FORMAT(2X,I5,2X,E12.5,2X,E12.5,2X,E12.5,2X,E12.5,2X,E12.5)
 
-  999 RETURN
+  !999 RETURN
       END SUBROUTINE OUTPUT
 
 !     *****************************************************************
@@ -36,7 +36,7 @@ contains
     PARAMETER (IMP1=50,IP=50)
     COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
                    GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
-                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR ! rank 0
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, IPREDP, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT, TFACTR ! rank 0
     DIMENSION BUFFER(IP)
     CHARACTER TITLE*80
     SAVE
@@ -62,6 +62,7 @@ contains
             DV_X(I) = BASEL
         ENDDO
 
+        write ( *, * ) 'IPREDP = ', IPREDP
         IF(IPREDP.GT.1)THEN
             DO I=1,IPREDP-1,1
                 BUFFER(I) = BASEL
@@ -80,7 +81,7 @@ contains
     PARAMETER (IMP1=50,IP=50)
     COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
                    GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
-                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR ! rank 0
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, IPREDP, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT, TFACTR ! rank 0
     DIMENSION BUFFER(IP)
     SAVE
 
@@ -88,9 +89,11 @@ contains
             DV_X(I)=DV_X(I+1)
         ENDDO
 
+        write ( *, * ) 'pretest IPREDP = ', IPREDP
         IF(IPREDP.EQ.1)THEN
           DV_X(IFILEN)=TRUE_X
         ELSE
+        write ( *, * ) 'IPREDP is now = ', IPREDP
           DV_X(IFILEN)=BUFFER(1)
           DO I=1,IPREDP-2,1
               BUFFER(I)=BUFFER(I+1)
@@ -99,8 +102,11 @@ contains
         END IF
 
         READ(IIN,*,END=999,ERR=999)TRUE_X
+        write ( *, * ) 'TRUE_X = ', TRUE_X
         ICOUNT=ICOUNT+1
+        write ( *, * ) 'ICOUNT = ', ICOUNT
 
+        return
     999 STOP
 
     END SUBROUTINE READIN2

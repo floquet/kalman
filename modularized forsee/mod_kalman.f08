@@ -10,9 +10,9 @@ contains
       SUBROUTINE INITAL(TEST1)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       PARAMETER (IMP1=50)
-      COMMON/FILTER/PCM_P(IMP1,IMP1),GV_K(IMP1),FV_F(IMP1),DV_X(IMP1), &
-        QCOEFF,RCOEFF,PRED_X,TRUE_X,IFILEN,BASEL,QA,QB,QC,RA,RB,RC, &
-        ICOUNT,TFACTR
+    COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
+                   GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, IPREDP, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT, TFACTR ! rank 0
 
       DO I=1,IFILEN,1
         DO J=1,IFILEN,1
@@ -26,6 +26,7 @@ contains
         PCM_P(I,I)=1.0D0
       ENDDO
       TEST1=IFILEN
+        write ( *, * ) 'TEST1 = ', TEST1
 
       RETURN
       END SUBROUTINE INITAL
@@ -40,18 +41,22 @@ contains
     SUBROUTINE KALMAN(TEST1)
     IMPLICIT DOUBLE PRECISION (A-H,O-Z)
     PARAMETER (IMP1=50)
-    COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), &
-                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR
+    COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
+                   GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, IPREDP, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT, TFACTR ! rank 0
     REAL TSCALR, TMAT(IMP1,IMP1)
 
 !     UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE)
 
+        write ( *, * ) 'inside kalman: TEST1 = ', TEST1
+        write ( *, * ) 'UPDATE THE PREDICTED COVARIANCE MATRIX'
     DO I=1,IFILEN,1
         PCM_P(I,I) = PCM_P(I,I) + QCOEFF
     ENDDO
 
 !     UPDATE THE GAIN VECTOR
 
+    write ( *, * ) 'UPDATE THE GAIN VECTOR'
       TSCALR = 0.0
       TEST0 = 0.0D0
       DO I=1,IFILEN,1
@@ -79,6 +84,7 @@ contains
 
 !     UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)
 
+    write ( *, * ) 'UPDATE THE PREDICTED COVARIANCE MATRIX (2nd UPDATE)'
       DO I=1,IFILEN,1
         DO J=1,IFILEN,1
           TMAT(I,J) =  GV_K(I)*DV_X(J)
@@ -95,6 +101,7 @@ contains
 
 !     UPDATE THE FILTER VECTOR
 
+    write ( *, * ) 'UPDATE THE FILTER VECTOR'
       PRED_X = 0.0D0
       DO I=1,IFILEN,1
         PRED_X = PRED_X + FV_F(I)*DV_X(I)

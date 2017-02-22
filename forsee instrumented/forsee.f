@@ -30,12 +30,12 @@ C
 C
 C     READ NEXT DATA POINT, COMPUTE PREDICTION, AND PRINT OUTPUT
 C
-        do j = 1, 5
+        !do j = 1, 5
  1          CALL READIN(2,IIN,IOUT,IPLT1,IPLT2,IPLT3)
             CALL KALMAN(TEST1)
             CALL OUTPUT(IOUT,IPLT1,IPLT2,IPLT3)
-        end do
-      !GOTO 1
+        !end do
+      GOTO 1
 C
  9999 STOP
       END
@@ -243,6 +243,7 @@ C
         DV_X(I) = BASEL
         ENDDO
 C
+        write ( *, * ) 'IPREDP = ', IPREDP
         IF(IPREDP.GT.1)THEN
         DO I=1,IPREDP-1,1
         BUFFER(I) = BASEL
@@ -264,6 +265,7 @@ C        WRITE(IPLT3,*)'     I      ERROR'
         DV_X(I)=DV_X(I+1)
         ENDDO
 C
+        write ( *, * ) 'pretest IPREDP = ', IPREDP
         IF(IPREDP.EQ.1)THEN
           DV_X(IFILEN)=TRUE_X
         ELSE

@@ -15,7 +15,7 @@ program forsee
     PARAMETER (IMP1=50)
     COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
                    GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
-                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR ! rank 0
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, IPREDP, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR ! rank 0
     CHARACTER FNAME*30
     DATA IIN,IOUT,IPLT1,IPLT2,IPLT3/1,2,8,9,10/
 
@@ -39,6 +39,7 @@ program forsee
 
         ! READ NEXT DATA POINT, COMPUTE PREDICTION, AND PRINT OUTPUT!
  1      CALL READIN2 (IIN,IOUT,IPLT1,IPLT2,IPLT3)
+        write ( *, * ) 'calling Kalman with TEST1 = ', TEST1
         CALL KALMAN(TEST1)
         CALL OUTPUT(IOUT,IPLT1,IPLT2,IPLT3)
         GOTO 1
