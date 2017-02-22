@@ -8,7 +8,7 @@ program forsee
 
     use mCharacterPositions,    only : dcharp
     use mKalman,                only : INITAL, KALMAN
-    use mIO,                    only : OUTPUT, READIN
+    use mIO,                    only : OUTPUT, READIN1, READIN2
 
     IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 
@@ -31,14 +31,14 @@ program forsee
         OPEN ( IPLT2, FILE = FNAME(K1:K2) // '.P',   STATUS = 'UNKNOWN')
         OPEN ( IPLT3, FILE = FNAME(K1:K2) // '.E',   STATUS = 'UNKNOWN')
 
-        CALL READIN(1,IIN,IOUT,IPLT1,IPLT2,IPLT3)
+        CALL READIN1 (IIN,IOUT,IPLT1,IPLT2,IPLT3)
 
         ! INITIALIZE VARIABLES
 
         CALL INITAL(TEST1)
 
         ! READ NEXT DATA POINT, COMPUTE PREDICTION, AND PRINT OUTPUT!
- 1      CALL READIN(2,IIN,IOUT,IPLT1,IPLT2,IPLT3)
+ 1      CALL READIN2 (IIN,IOUT,IPLT1,IPLT2,IPLT3)
         CALL KALMAN(TEST1)
         CALL OUTPUT(IOUT,IPLT1,IPLT2,IPLT3)
         GOTO 1

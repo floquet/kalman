@@ -37,18 +37,18 @@ contains
 !     *                          RECURSIVE KALMAN FILTER              *
 !     *                                                               *
 !     *****************************************************************
-      SUBROUTINE KALMAN(TEST1)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      PARAMETER (IMP1=50)
+    SUBROUTINE KALMAN(TEST1)
+    IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+    PARAMETER (IMP1=50)
     COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), &
                    QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR
-      REAL TSCALR, TMAT(IMP1,IMP1)
+    REAL TSCALR, TMAT(IMP1,IMP1)
 
 !     UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE)
 
-      DO I=1,IFILEN,1
+    DO I=1,IFILEN,1
         PCM_P(I,I) = PCM_P(I,I) + QCOEFF
-      ENDDO
+    ENDDO
 
 !     UPDATE THE GAIN VECTOR
 

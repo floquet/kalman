@@ -30,7 +30,8 @@ contains
 !     *      SUBROUTINE READIN - TO READ AND ECHO-PRINT INPUT DATA    *
 !     *                                                               *
 !     *****************************************************************
-    SUBROUTINE READIN(IFLAG,IIN,IOUT,IPLT1,IPLT2,IPLT3)
+
+    SUBROUTINE READIN1(IIN,IOUT,IPLT1,IPLT2,IPLT3)
     IMPLICIT DOUBLE PRECISION (A-H,O-Z)
     PARAMETER (IMP1=50,IP=50)
     COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
@@ -40,7 +41,6 @@ contains
     CHARACTER TITLE*80
     SAVE
 
-      IF(IFLAG.EQ.1)THEN       ! READ AND ECHO INITIAL INPUT DATA !
         READ(IIN,'(A80)') TITLE
         WRITE(IOUT,'(A80)') TITLE
         READ(IIN,*)QCOEFF,RCOEFF,IFILEN,IPREDP,BASEL,TFACTR
@@ -59,13 +59,13 @@ contains
                 'THE TEST FACTOR VALUE IS:',2X,E12.5,//)
 
         DO I=1,IFILEN,1
-        DV_X(I) = BASEL
+            DV_X(I) = BASEL
         ENDDO
 
         IF(IPREDP.GT.1)THEN
-        DO I=1,IPREDP-1,1
-        BUFFER(I) = BASEL
-        ENDDO
+            DO I=1,IPREDP-1,1
+                BUFFER(I) = BASEL
+            ENDDO
         END IF
 
         TRUE_X = BASEL
@@ -73,9 +73,19 @@ contains
         WRITE(IOUT,*)'     I      TRUE_X        PRED_X        ERROR            Q             R   '
         WRITE(*,*)   '     I      TRUE_X        PRED_X        ERROR            Q             R   '
 
-      ELSE IF(IFLAG.EQ.2)THEN   ! READ TIME HISTORY DATA !
+    END SUBROUTINE READIN1
+
+    SUBROUTINE READIN2(IIN,IOUT,IPLT1,IPLT2,IPLT3)
+    IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+    PARAMETER (IMP1=50,IP=50)
+    COMMON/FILTER/ PCM_P ( IMP1, IMP1 ), & ! rank 2
+                   GV_K ( IMP1 ), FV_F ( IMP1 ), DV_X ( IMP1 ), & ! rank 1
+                   QCOEFF, RCOEFF, PRED_X, TRUE_X, IFILEN, BASEL, QA, QB, QC, RA, RB, RC, ICOUNT,TFACTR ! rank 0
+    DIMENSION BUFFER(IP)
+    SAVE
+
         DO I=1,IFILEN-1,1
-        DV_X(I)=DV_X(I+1)
+            DV_X(I)=DV_X(I+1)
         ENDDO
 
         IF(IPREDP.EQ.1)THEN
@@ -83,18 +93,16 @@ contains
         ELSE
           DV_X(IFILEN)=BUFFER(1)
           DO I=1,IPREDP-2,1
-          BUFFER(I)=BUFFER(I+1)
+              BUFFER(I)=BUFFER(I+1)
           ENDDO
           BUFFER(IPREDP-1)=TRUE_X
         END IF
 
         READ(IIN,*,END=999,ERR=999)TRUE_X
         ICOUNT=ICOUNT+1
-      END IF
 
-      RETURN
+    999 STOP
 
-  999 STOP
-      END SUBROUTINE READIN
+    END SUBROUTINE READIN2
 
 end module mIO
