@@ -61,7 +61,7 @@ mod_constants.o           : mod_set_precision.o
 mod_file_handling.o       :
 mod_io_handles.o          :
 mod_command_line.o        : mod_constants.o
-mod_kalman_data.o         : mod_command_line.o mod_constants.o mod_io_handles.o mod_set_precision.o mod_file_handling.o
+mod_kalman_data.o         : mod_command_line.o mod_constants.o mod_io_handles.o mod_set_precision.o mod_file_handling.o mod_time_stamp.o
 mod_kalman_write.o        : mod_constants.o
 mod_set_precision.o       :
 mod_time_stamp.o          :

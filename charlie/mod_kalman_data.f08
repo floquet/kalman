@@ -5,6 +5,7 @@ module mKalmanData
     use mConstants,                     only : one, zero, stdout, fmt_generic
     use mIOHandles,                     only : io_handles
     use mSetPrecision,                  only : ip, rp
+    use mTimeStamp,                     only : timestamp
 
     implicit none
 
@@ -15,7 +16,7 @@ module mKalmanData
     ! variables
     integer                 :: io_handle = stdout, record
     integer ( ip ), private :: j, k ! iterators
-    integer ( ip )          :: k_numDataPoints
+    integer ( ip )          :: k_numDataPoints ! iterator over number of measurements
 
     logical :: echo_print = .true.
 
@@ -101,6 +102,7 @@ contains
             call get_all_data_sub    ( me )  ! [25]
             call set_interval_sub    ( me )  ! [212]
 
+            ! READIN with IFLAG = 1
             me % dv_x ( 1 : me % LengthFilter ) = me % baseline  ! [236]
             if ( me % LengthPrediction > 1 ) then  ! [239]
                 do k = 1, me % LengthPrediction - 1
@@ -109,12 +111,14 @@ contains
             endif
             me % true_x = me % baseline  ! [245]
 
+            call initialize_data_sub ( me )  ! [29]
+
             if ( echo_print ) call echo_data_sub      ( me, io_write = stdout )
             if ( echo_print ) call first_and_last_sub ( me, io_write = stdout )
 
             call write_header_sub    ( me )
-            call initialize_data_sub ( me )  ! [29]
 
+            ! READIN with IFLAG = 2
             do k = 1, 2 !me % numDataPoints  ! [260]
                 me % index = me % index + 1
                 me % dv_x ( me % LengthFilter ) = me % true_x  ! [261]
@@ -130,6 +134,8 @@ contains
                 call kalman_sub ( me )
                 call output_sub ( me )
             end do
+
+            write ( unit = me % myIO % out, fmt = fmt_generic ) timestamp ()
 
     end subroutine analyze_data_sub
 
@@ -148,7 +154,6 @@ contains
 
             write ( stdout, fmt_generic ) 'index  = ', me % index
             write ( stdout, fmt_generic ) 'true_x = ', me % true_x
-
 
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
             write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % LengthFilter,' ) = ', pcmp_diagonal( me % LengthFilter )
@@ -201,6 +206,7 @@ contains
 
             ! rank 0
             me % test1  = me % rLengthFilter  !  [87]
+            write ( unit = stdout, fmt = fmt_generic ) 'me % test1 = ', me % test1
             !me % true_x = me % baseline  ! [245]
 
             me % index = 0_ip
