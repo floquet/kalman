@@ -89,11 +89,11 @@ contains
             DV_X(I)=DV_X(I+1)
         ENDDO
 
-        write ( *, * ) 'pretest IPREDP = ', IPREDP
+        !write ( *, * ) 'pretest IPREDP = ', IPREDP
         IF(IPREDP.EQ.1)THEN
           DV_X(IFILEN)=TRUE_X
         ELSE
-        write ( *, * ) 'IPREDP is now = ', IPREDP
+        !write ( *, * ) 'IPREDP is now = ', IPREDP
           DV_X(IFILEN)=BUFFER(1)
           DO I=1,IPREDP-2,1
               BUFFER(I)=BUFFER(I+1)

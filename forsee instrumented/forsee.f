@@ -128,6 +128,9 @@ C
         ENDDO
       ENDDO
       TEST1 = TEST1 + IFILEN*(QCOEFF)
+      write ( *, * ) ''
+      write ( *, * ) 'test0 = ', test0, ', test1 = ', test1, ', t_scalar = ', t_scalar
+
 C
 C      WRITE(*,*)'ICOUNT,TSCALR,T0,T1',ICOUNT,TSCALR,TEST0,TEST1
       IF(TEST0.GT.(TFACTR*TEST1))THEN

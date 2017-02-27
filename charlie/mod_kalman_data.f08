@@ -10,7 +10,7 @@ module mKalmanData
     implicit none
 
     ! parameters
-    integer ( ip ), parameter :: imp1 = 50, imp2 = 50
+    integer ( ip ),        parameter :: imp1 = 50, imp2 = 50
     character ( len = * ), parameter :: error_fatal = 'Fatal error in module "mKalmanData"...'
 
     ! variables
@@ -119,17 +119,29 @@ contains
             call write_header_sub    ( me )
 
             ! READIN with IFLAG = 2
-            do k = 1, 2 !me % numDataPoints  ! [260]
-                me % index = me % index + 1
-                me % dv_x ( me % LengthFilter ) = me % true_x  ! [261]
+            do k = 1, 3 !me % numDataPoints  ! [260]
 
-                if ( me % LengthPrediction > 1 ) then
+                do j = 1, me % LengthFilter - 1  ! [256]
+                    me % dv_x ( j ) = me % dv_x ( j + 1 )
+                end do
+
+                !me % dv_x ( me % LengthFilter ) = me % true_x  ! [261]
+
+                if ( me % LengthPrediction == 1 ) then ! [260]
+                    me % dv_x ( me % LengthFilter ) = me % true_x
+                else
                     me % dv_x ( me % LengthFilter ) = me % buffer ( 1 )
                     do j = 1, me % LengthPrediction - 2
                         me % buffer ( j ) = me % buffer ( j + 1 )  ! [265]
                     end do
                     me % buffer ( me % LengthPrediction - 1 ) = me % true_x  ! [267]
                 end if
+
+                me % index  = me % index + 1
+                me % true_x = me % data_set ( me % index )
+
+            write ( stdout, fmt_generic ) 'into kalmen: index  = ', me % index
+            write ( stdout, fmt_generic ) 'into kalmen: true_x = ', me % true_x
 
                 call kalman_sub ( me )
                 call output_sub ( me )
@@ -152,21 +164,25 @@ contains
 
         class ( KalmanData ), target :: me
 
-            write ( stdout, fmt_generic ) 'index  = ', me % index
-            write ( stdout, fmt_generic ) 'true_x = ', me % true_x
-
-            pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q  !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
+            !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
+            pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q
             write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % LengthFilter,' ) = ', pcmp_diagonal( me % LengthFilter )
-            me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  ! UPDATE THE GAIN VECTOR  [113]  x*Ax
+            ! UPDATE THE GAIN VECTOR  [113]  x*Ax
+            me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  !  [119]
             me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
-            me % test1 = me % test1 + me % q * me % rLengthFilter  !  [123]
+            me % test1 = me % test1 + me % q * me % rLengthFilter  !  [130]
+            write ( stdout, fmt_generic ) ''
+            write ( stdout, fmt_generic ) 'test0 = ', me % test0, ', test1 = ', me % test1, ', t_scalar = ', me % t_scalar
 
             ! scaling operations on line [126]
+            write ( stdout, fmt_generic ) 'q in = ', me % q
             if ( me % test0 > me % TestFactor * me % test1 ) then
                 if ( me % q > 10.0_rp ** (-10) ) me % q = me % q * me % rLengthFilter / me % test0
+                write ( stdout, fmt_generic ) 'test0 = ', me % test0, '; TestFactor = ', me % TestFactor, '; test1 = ', me % test1
                 if ( me % r > 10.0_rp ** (+10) ) me % r = me % r * me % test0         / me % rLengthFilter
                 me % test1 = me % test0
             end if
+            write ( stdout, fmt_generic ) 'q out = ', me % q
 
             ! line [132]
             me % t_scalar = me % t_scalar + me % r

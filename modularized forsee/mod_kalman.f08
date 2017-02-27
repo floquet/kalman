@@ -68,8 +68,13 @@ contains
       TEST1 = TEST1 + IFILEN*(QCOEFF)
 
 !      WRITE(*,*)'ICOUNT,TSCALR,T0,T1',ICOUNT,TSCALR,TEST0,TEST1
+      write ( *, * ) ''
+      write ( *, * ) 'TEST0 = ', TEST0, ', TFACTR = ', TFACTR, ', TEST1 = ', TEST1
       IF(TEST0.GT.(TFACTR*TEST1))THEN
+        write ( *, * ) 'in  QCOEFF = ', QCOEFF
+        write ( *, * ) 'TEST0 = ', TEST0, ', TFACTR*TEST1 = ', TFACTR*TEST1
         IF(QCOEFF.GT.1.E-10)QCOEFF=QCOEFF*(REAL(IFILEN)/TEST0)
+        write ( *, * ) 'out QCOEFF = ', QCOEFF
         IF(RCOEFF.LT.1.E+10)RCOEFF=RCOEFF*(TEST0/REAL(IFILEN))
         TEST1=TEST0
       END IF
