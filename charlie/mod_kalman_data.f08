@@ -18,7 +18,7 @@ module mKalmanData
     integer ( ip ), private :: j, k ! iterators
     integer ( ip )          :: k_numDataPoints ! iterator over number of measurements
 
-    logical :: echo_print = .true.
+    logical :: echo_print = .false.
 
     ! pointers
     real ( rp ), pointer :: pcmp_flattened ( : ), pcmp_diagonal ( : )
@@ -140,8 +140,8 @@ contains
                 me % index  = me % index + 1
                 me % true_x = me % data_set ( me % index )
 
-            write ( stdout, fmt_generic ) 'into kalmen: index  = ', me % index
-            write ( stdout, fmt_generic ) 'into kalmen: true_x = ', me % true_x
+            !write ( stdout, fmt_generic ) 'into kalmen: index  = ', me % index
+            !write ( stdout, fmt_generic ) 'into kalmen: true_x = ', me % true_x
 
                 call kalman_sub ( me )
                 call output_sub ( me )
@@ -166,13 +166,27 @@ contains
 
             !  UPDATE THE PREDICTED COVARIANCE MATRIX (1st UPDATE) [110]
             pcmp_diagonal ( : ) = pcmp_diagonal ( : ) + me % q
-            write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % LengthFilter,' ) = ', pcmp_diagonal( me % LengthFilter )
+            !write ( stdout, fmt_generic ) 'pcm_p ( ', j, ', ', k, ' ) = ', ( me % pcm_p ( i, j ), j, 1, LengthFilter )
+            write ( stdout, fmt_generic ) 'size   of pcm_p matrix = ', &
+                                    size ( me % pcm_p ( 1:me % LengthFilter, 1:me % LengthFilter ) )
+            write ( stdout, fmt_generic ) 'values of pcm_p matrix = '
+            do j = 1, me % LengthFilter
+                write ( stdout, fmt_generic ) ( me % pcm_p ( j, k ), k = 1, me % LengthFilter )
+            end do
+            write ( stdout, fmt_generic ) 'test0 = ', me % test0
+            write ( stdout, fmt_generic ) 'sum = ', sum ( abs ( me % pcm_p ( 1:me % LengthFilter , 1:me % LengthFilter ) ) )
+            !write ( stdout, fmt_generic ) 'pcmp_diagonal ( ', me % LengthFilter,' ) = ', pcmp_diagonal( me % LengthFilter )
             ! UPDATE THE GAIN VECTOR  [113]  x*Ax
             me % t_scalar = dot_product ( me % dv_x ( : ), matmul ( me % pcm_p ( : , : ), me % dv_x ( : ) ) )  !  [119]
-            me % test0 = sum ( sum ( abs ( me % pcm_p ( : , : ) ), 1 ) )  !  [120]
+            !me % test0 = sum ( abs ( me % pcm_p ( : , : ) ), 1 )  !  [120]
+            write ( stdout, fmt_generic ) '1. sum ( abs ( me % pcm_p ( : , : ) ), 1 ) = ', sum ( abs ( me % pcm_p ( : , : ) ), 1 )
+            !me % test0 = sum ( me % test0 )  !  [120]
+            !write ( stdout, fmt_generic ) '2. test0 = ', me % test0
+            me % test0 = sum ( abs ( me % pcm_p ( 1 : me % LengthFilter , 1 : me % LengthFilter ) ) )  !  [120]
             me % test1 = me % test1 + me % q * me % rLengthFilter  !  [130]
             write ( stdout, fmt_generic ) ''
-            write ( stdout, fmt_generic ) 'test0 = ', me % test0, ', test1 = ', me % test1, ', t_scalar = ', me % t_scalar
+            write ( stdout, fmt_generic ) 'test0 = ', me % test0, ', test1 = ', me % test1, &
+                                          ', TestFactor = ', me % TestFactor, ', t_scalar = ', me % t_scalar
 
             ! scaling operations on line [126]
             write ( stdout, fmt_generic ) 'q in = ', me % q
