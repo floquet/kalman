@@ -41,7 +41,7 @@ program forsee
 !1      CALL READIN2 (IIN,IOUT,IPLT1,IPLT2,IPLT3)
         do k = 1, 5
             CALL READIN2 (IIN,IOUT,IPLT1,IPLT2,IPLT3)
-            write ( *, * ) 'calling Kalman with TEST1 = ', TEST1
+            !write ( *, * ) 'calling Kalman with TEST1 = ', TEST1
             CALL KALMAN(TEST1)
             CALL OUTPUT(IOUT,IPLT1,IPLT2,IPLT3)
         end do

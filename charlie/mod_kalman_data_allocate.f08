@@ -27,19 +27,19 @@ submodule ( mKalmanData ) smKalmanDataAllocate
         class ( KalmanData ), target :: me
 
             ! rank 2
-            call allocate_rank_2_rp_sub ( me % pcm_p, me % numDataPoints, me % numDataPoints )
+            call allocate_rank_2_rp_sub ( me % pcm_p, me % LengthFilter, me % LengthFilter )
 
             ! pointer to diagonal elements
             ! Metcalf, Cohen, Reid, figure 20.5, p. 364
-            pcmp_flattened ( 1 : me % numDataPoints * me % numDataPoints ) => me % pcm_p ( : , : )
-            pcmp_diagonal  => pcmp_flattened ( :: me % numDataPoints + 1 )
+            pcmp_flattened ( 1 : me % LengthFilter * me % LengthFilter ) => me % pcm_p ( : , : )
+            pcmp_diagonal  => pcmp_flattened ( :: me % LengthFilter + 1 )
 
-            call allocate_rank_2_rp_sub ( me % tmat,  me % numDataPoints, me % numDataPoints )
+            call allocate_rank_2_rp_sub ( me % tmat,  me % LengthFilter, me % LengthFilter )
             ! rank 1
-            call allocate_rank_1_rp_sub ( me % dv_x,     me % numDataPoints )
-            call allocate_rank_1_rp_sub ( me % gv_k,     me % numDataPoints )
-            call allocate_rank_1_rp_sub ( me % fv_f,     me % numDataPoints )
-            call allocate_rank_1_rp_sub ( me % buffer,   me % numDataPoints )
+            call allocate_rank_1_rp_sub ( me % dv_x,     me % LengthFilter )
+            call allocate_rank_1_rp_sub ( me % gv_k,     me % LengthFilter )
+            call allocate_rank_1_rp_sub ( me % fv_f,     me % LengthFilter )
+            call allocate_rank_1_rp_sub ( me % buffer,   me % LengthFilter )
             call allocate_rank_1_rp_sub ( me % data_set, me % numDataPoints )
 
     end subroutine allocator_sub

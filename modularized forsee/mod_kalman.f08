@@ -59,22 +59,25 @@ contains
     write ( *, * ) 'UPDATE THE GAIN VECTOR'
       TSCALR = 0.0
       TEST0 = 0.0D0
+      write ( *, * ) 'pcm_p = ', ( pcm_p ( i , i ), i = 1, IFILEN )
       DO I=1,IFILEN,1
         DO J=1,IFILEN,1
           TSCALR = TSCALR + DV_X(I)*PCM_P(I,J)*DV_X(J)
           TEST0 = TEST0 + ABS(PCM_P(I,J))
+          write ( *, * ) 'i = ', i, ', j = ', j, ', test0 = ', test0, ', entry = ', pcm_p ( i, j )
         ENDDO
       ENDDO
       TEST1 = TEST1 + IFILEN*(QCOEFF)
 
 !      WRITE(*,*)'ICOUNT,TSCALR,T0,T1',ICOUNT,TSCALR,TEST0,TEST1
       write ( *, * ) ''
-      write ( *, * ) 'TEST0 = ', TEST0, ', TFACTR = ', TFACTR, ', TEST1 = ', TEST1
+      write ( *, * )   'TEST0 = ', TEST0,   ', TEST1 = ', TEST1, &
+                    ', TFACTR = ', TFACTR, ', TSCALR = ', TSCALR
       IF(TEST0.GT.(TFACTR*TEST1))THEN
-        write ( *, * ) 'in  QCOEFF = ', QCOEFF
-        write ( *, * ) 'TEST0 = ', TEST0, ', TFACTR*TEST1 = ', TFACTR*TEST1
+        ! write ( *, * ) 'in  QCOEFF = ', QCOEFF
+        ! write ( *, * ) 'TEST0 = ', TEST0, ', TFACTR*TEST1 = ', TFACTR*TEST1
         IF(QCOEFF.GT.1.E-10)QCOEFF=QCOEFF*(REAL(IFILEN)/TEST0)
-        write ( *, * ) 'out QCOEFF = ', QCOEFF
+        ! write ( *, * ) 'out QCOEFF = ', QCOEFF
         IF(RCOEFF.LT.1.E+10)RCOEFF=RCOEFF*(TEST0/REAL(IFILEN))
         TEST1=TEST0
       END IF
